@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useReducer, useEffect, ReactNode } from "react";
+import { createContext, useReducer, ReactNode } from "react";
 
 type NotebookSidebarSettings = { disabled: boolean; isHoverOpen: boolean };
 type NotebookSidebarState = {
@@ -53,33 +53,17 @@ export const NotebookSidebarContext = createContext<
   | undefined
 >(undefined);
 
-const loadStateFromLocalStorage = (): NotebookSidebarState => {
-  try {
-    const savedState = localStorage.getItem("notebookSidebarState");
-    return savedState ? JSON.parse(savedState) : initialState;
-  } catch (error) {
-    console.error("Failed to load state from local storage", error);
-    return initialState;
-  }
-};
-
 export const NotebookSidebarProvider = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  const [state, dispatch] = useReducer(
-    notebookSidebarReducer,
-    loadStateFromLocalStorage()
-  );
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("notebookSidebarState", JSON.stringify(state));
-    } catch (error) {
-      console.error("Failed to save state to local storage", error);
-    }
-  }, [state]);
+  const [state, dispatch] = useReducer(notebookSidebarReducer, {
+    ...initialState,
+    isOpen: true,
+    isHover: false,
+    settings: { disabled: false, isHoverOpen: false },
+  });
 
   const toggleOpen = () => {
     dispatch({ type: "TOGGLE_OPEN" });

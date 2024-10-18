@@ -15,7 +15,7 @@ export function SidebarToggle() {
   const { isOpen, toggleOpen } = sidebar;
 
   return (
-    <div className="invisible lg:visible z-20">
+    <div className="z-20 flex">
       <Button
         onClick={() => toggleOpen()}
         className="rounded-md w-6 h-6"
