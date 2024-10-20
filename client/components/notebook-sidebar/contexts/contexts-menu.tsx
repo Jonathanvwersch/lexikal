@@ -3,33 +3,35 @@
 import { MessageSquareQuote, Quote } from "lucide-react";
 import { MenuParentItem } from "../menu/menu-parent-item";
 import { MenuItem } from "../menu/menu-item";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { AddContext } from "./add-context";
 
 const mockInitialContexts = [
   {
     id: "1",
-    name: "Source 1",
+    name: "Context 1",
     type: "url",
   },
   {
     id: "2",
-    name: "Source 2",
+    name: "Context 2",
     type: "file",
   },
   {
     id: "3",
-    name: "Source 3",
+    name: "Context 3",
     type: "text",
   },
 ];
 
 export function ContextsMenu() {
-  const pathname = usePathname();
+  const params = useParams();
+  const notebookId = params.notebookId as string;
+  const basePath = `/notebooks/${notebookId}/contexts`;
 
   return (
     <MenuParentItem
-      href={`${pathname}/contexts`}
+      href={basePath}
       Icon={MessageSquareQuote}
       label="Contexts"
       AddComponent={<AddContext />}
@@ -37,7 +39,7 @@ export function ContextsMenu() {
       {mockInitialContexts.map((context) => (
         <MenuItem
           key={context.id}
-          href={`${pathname}/contexts/${context.id}`}
+          href={`${basePath}/${context.id}`}
           Icon={Quote}
           label={context.name}
           onEdit={() => {}}

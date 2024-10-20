@@ -21,7 +21,7 @@ function _Logo({ asLink = true }: Props) {
           alt="Lexikal logo"
           width={32}
           height={32}
-          style={{ borderRadius: "10px" }}
+          className="rounded-md"
         />
         <h1 className={`${lato.className} hidden sm:block text-md font-bold`}>
           Lexikal
