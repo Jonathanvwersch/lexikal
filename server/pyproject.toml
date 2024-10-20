@@ -5,13 +5,17 @@ description = ""
 authors = ["Jonathan van Wersch <jonathanvwersch@gmail.com>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+start = "app.main:start"
+
 [tool.poetry.dependencies]
-python = "^3.12"
-sqlmodel = "^0.0.22"
+python = "^3.13"
+pydantic = "^2.9.2"
+sqlalchemy = "^2.0.36"
+supabase = "^2.9.1"
 fastapi = "^0.115.2"
 uvicorn = "^0.32.0"
-pydantic = "^2.9.2"
-python-multipart = "^0.0.12"
+python-dotenv = "^1.0.1"
 
 
 [build-system]

@@ -18,7 +18,7 @@ export function ChatMessages() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   return (
-    <ChatMessageList className="bg-muted/25 rounded-[8px]" ref={messagesRef}>
+    <ChatMessageList className="rounded-[8px]" ref={messagesRef}>
       {/* Initial message */}
       <ChatBubble variant="received">
         <ChatBubbleAvatar
