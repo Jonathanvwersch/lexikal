@@ -71,7 +71,7 @@ export default function NewNotebookForm() {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="tags"
           render={({ field }) => (
@@ -85,7 +85,7 @@ export default function NewNotebookForm() {
               </FormControl>
             </FormItem>
           )}
-        />
+        /> */}
         <Button color="primary" type="submit" className="w-full mt-4">
           Create
         </Button>

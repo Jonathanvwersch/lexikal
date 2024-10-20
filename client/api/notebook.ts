@@ -1,4 +1,4 @@
-import { Notebook } from "@/types/notebooks";
+import { Notebook } from "@/types/notebook";
 import { useQuery, useMutation, UseQueryResult } from "@tanstack/react-query";
 
 const API_BASE_URL = "http://localhost:8000";
@@ -46,7 +46,7 @@ export const fetchNotebook = async (id: string): Promise<Notebook> => {
 
 export const useNotebook = (id: string): UseQueryResult<Notebook, Error> => {
   return useQuery({
-    queryKey: ["notebook", id], // Correctly structured as an object
+    queryKey: ["notebook", id],
     queryFn: () => fetchNotebook(id),
   });
 };

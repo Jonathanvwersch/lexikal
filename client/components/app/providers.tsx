@@ -6,9 +6,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import { ThemeProvider } from "../theme/theme-provider";
-import { Toaster } from "../ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { BreadCrumbsContext } from "@/context/breadcrumbs/breadcrumbs-context";
 
 function makeQueryClient() {
@@ -52,7 +51,7 @@ export default function Providers({ children }: Props) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
