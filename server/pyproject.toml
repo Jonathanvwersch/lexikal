@@ -10,9 +10,9 @@ start = "app.main:start"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-pydantic = "^2.9.2"
+pydantic = "^2.0.0"
 sqlalchemy = "^2.0.36"
-supabase = "^2.9.1"
+supabase = "^1.0.3"
 fastapi = "^0.115.2"
 uvicorn = "^0.32.0"
 python-dotenv = "^1.0.1"
