@@ -1,8 +1,0 @@
-{
-  "typescript": {
-    "componentStyle": "function",
-    "propsStyle": "type",
-    "propsReadonly": true,
-    "exportStyle": "named"
-  }
-}
