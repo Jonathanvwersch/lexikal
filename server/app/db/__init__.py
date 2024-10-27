@@ -1,3 +1,16 @@
+from typing import Generator
+from supabase import Client as SupabaseClient  
 from .supabase import supabase
 
-__all__ = ["supabase"]
+def get_db() -> Generator[SupabaseClient, None, None]:
+    """
+    Database dependency that manages Supabase client connections.
+    Use this as a FastAPI dependency.
+    """
+    try:
+        yield supabase
+    finally:
+        # Add any cleanup if needed
+        pass
+
+__all__ = ["supabase", "get_db"]

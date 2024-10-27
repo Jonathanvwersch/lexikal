@@ -1,11 +1,30 @@
 from fastapi import FastAPI
-from .api import auth
-from .db.supabase import create_supabase_client
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from .db import supabase
 import uvicorn
+from .api.notebooks import router as notebooks_router
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan():
+    # Startup
+    yield
+    # Shutdown
+    await supabase.client.close()
 
-app.include_router(auth.router, prefix="/auth")
+
+app = FastAPI(redirect_slashes=False, root_path="/api/v1")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(notebooks_router)
 
 @app.get("/")
 async def root():

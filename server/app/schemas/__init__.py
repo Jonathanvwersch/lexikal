@@ -1,3 +1,15 @@
-from .user import UserCreate
+from .notebooks import (
+    NotebookPostRequest,
+    NotebookPostResponse,
+    NotebookPatchRequest,
+    NotebookGetResponse,
+    NotebooksGetResponse
+)
 
-__all__ = ["UserCreate"]
+__all__ = [
+    "NotebookPostRequest",
+    "NotebookPostResponse",
+    "NotebookPatchRequest",
+    "NotebookGetResponse",
+    "NotebooksGetResponse"
+]

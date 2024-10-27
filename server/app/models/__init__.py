@@ -1,3 +1,6 @@
-from .user import User
+from .notebooks import Notebook
 
-__all__ = ["Notebook", "User"]
+__all__ = ["Notebook"]
+
+
+

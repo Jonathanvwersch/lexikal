@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
-from dotenv import load_dotenv
 
 def create_supabase_client() -> Client:
     load_dotenv()
