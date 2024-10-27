@@ -4,32 +4,18 @@ import { Logo } from "../ui/logo";
 import { GoogleAuthButton } from "./google-auth-button";
 import { APP_SUBHEADING } from "@/constants/app";
 
-export default function LoginForm() {
+export default function SignUpForm() {
   return (
     <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-        <div className="absolute inset-0 bg-zinc-900" />
-        <div className="relative z-20 flex items-center text-lg font-medium">
-          <Logo
-            darkMode
-            asLink={false}
-            textClassName="text-white"
-            iconClassName="w-8 h-8"
-          />
-        </div>
-        <div className="relative z-20 mt-auto">
-          <p className="text-lg">{APP_SUBHEADING}</p>
-        </div>
-      </div>
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <h1 className="text-2xl font-semibold text-center">Log in</h1>
+          <h1 className="text-2xl font-semibold text-center">Sign up</h1>
           <div className="flex flex-col gap-2">
             <GoogleAuthButton>Google</GoogleAuthButton>
             <p className="text-center text-xs">
-              Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="underline">
-                Sign up
+              Already have an account?{" "}
+              <Link href="/log-in" className="underline">
+                Log in
               </Link>
             </p>
           </div>
@@ -50,6 +36,19 @@ export default function LoginForm() {
             </Link>
             .
           </p>
+        </div>
+      </div>
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div className="absolute inset-0 bg-zinc-900" />
+        <div className="relative z-20 flex items-center text-lg font-medium">
+          <Logo
+            asLink={false}
+            textClassName="text-white"
+            iconClassName="w-8 h-8"
+          />
+        </div>
+        <div className="relative z-20 mt-auto">
+          <p className="text-lg">{APP_SUBHEADING}</p>
         </div>
       </div>
     </div>

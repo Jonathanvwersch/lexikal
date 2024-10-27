@@ -1,10 +1,10 @@
-import { GoogleLoginButton } from "../auth/google-login-button";
+import { Hero } from "./hero";
 import { LandingPageLayout } from "./layout";
 
 export function LandingPage() {
   return (
     <LandingPageLayout>
-      <GoogleLoginButton />
+      <Hero />
     </LandingPageLayout>
   );
 }

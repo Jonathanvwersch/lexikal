@@ -1,7 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "./server";
 
-const restrictedRoutes = ["/sign-in", "/log-in", "/login"];
+const restrictedRoutes = [
+  "/sign-in",
+  "/log-in",
+  "/login",
+  "/sign-up",
+  "/signup",
+];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -19,7 +25,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith("/log-in") &&
+    !restrictedRoutes.includes(request.nextUrl.pathname) &&
     !request.nextUrl.pathname.startsWith("/auth") &&
     request.nextUrl.pathname !== "/"
   ) {

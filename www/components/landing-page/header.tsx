@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Button } from "../ui/button";
 import { Logo } from "../ui/logo";
 
 export function LandingPageHeader() {
@@ -5,9 +7,16 @@ export function LandingPageHeader() {
     <HeaderWrapper>
       <HeaderInner>
         <HeaderLeftWrapper>
-          <Logo />
+          <Logo iconClassName="w-8 h-8" />
         </HeaderLeftWrapper>
-        <HeaderRightWrapper>hello</HeaderRightWrapper>
+        <HeaderRightWrapper>
+          <Button variant="outline" asChild>
+            <Link href="/sign-up">Sign up</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/log-in">Log in</Link>
+          </Button>
+        </HeaderRightWrapper>
       </HeaderInner>
     </HeaderWrapper>
   );
@@ -30,9 +39,11 @@ export function HeaderRightWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="flex items-center space-x-2 gap-2">{children}</div>;
+  return <div className="flex items-center space-x-2 gap-1">{children}</div>;
 }
 
 export function HeaderWrapper({ children }: { children: React.ReactNode }) {
-  return <header className="border-b py-4 px-3">{children}</header>;
+  return (
+    <header className="sticky top-0 border-b py-4 px-3">{children}</header>
+  );
 }

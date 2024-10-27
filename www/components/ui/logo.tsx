@@ -1,7 +1,8 @@
+import { Icons } from "@/assets/icons";
+import { cn } from "@/utils/styles";
 import { Lato } from "next/font/google";
 import Link from "next/link";
 import { memo, useMemo } from "react";
-import { LexikalIcon } from "@/assets/icons/lexikal";
 
 const lato = Lato({
   weight: ["400", "700"],
@@ -10,14 +11,28 @@ const lato = Lato({
 
 type Props = Readonly<{
   asLink?: boolean;
+  iconClassName?: string;
+  textClassName?: string;
+  darkMode?: boolean;
 }>;
 
-function _Logo({ asLink = true }: Props) {
+function _Logo({
+  asLink = true,
+  iconClassName,
+  textClassName,
+  darkMode,
+}: Props) {
   const body = useMemo(
     () => (
       <>
-        <LexikalIcon width={32} height={32} className="rounded-md" />
-        <h1 className={`${lato.className} hidden sm:block text-md font-bold`}>
+        <Icons.logo className={cn(`rounded-md`, iconClassName)} />
+        <h1
+          className={cn(
+            `${lato.className} hidden sm:block text-md font-bold`,
+            textClassName,
+            darkMode && "text-white"
+          )}
+        >
           Lexikal
         </h1>
       </>

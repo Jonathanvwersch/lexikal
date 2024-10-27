@@ -6,7 +6,7 @@ export function Header() {
   return (
     <HeaderWrapper>
       <HeaderLeftWrapper>
-        <Logo />
+        <Logo iconClassName="w-8 h-8" />
         <Breadcrumbs />
       </HeaderLeftWrapper>
       <HeaderRightWrapper>

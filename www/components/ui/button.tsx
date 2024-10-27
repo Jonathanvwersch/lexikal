@@ -2,6 +2,7 @@ import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/styles";
+import { Icons } from "@/assets/icons";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -48,7 +49,7 @@ const buttonVariants = cva(
 
 interface IconProps {
   Icon: React.ElementType;
-  iconPlacement: "left" | "right";
+  iconPlacement?: "left" | "right";
 }
 
 interface IconRefProps {
@@ -60,6 +61,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  isLoading?: boolean;
 }
 
 export type ButtonIconProps = IconProps | IconRefProps;
@@ -74,8 +76,9 @@ const Button = React.forwardRef<
       variant,
       size,
       asChild = false,
+      isLoading = false,
       Icon,
-      iconPlacement,
+      iconPlacement = "left",
       ...props
     },
     ref
@@ -85,16 +88,14 @@ const Button = React.forwardRef<
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        disabled={isLoading || props.disabled}
         {...props}
       >
-        {Icon && iconPlacement === "left" && (
-          <div className="w-0 translate-x-[0%] pr-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-100 group-hover:pr-2 group-hover:opacity-100">
-            <Icon />
-          </div>
-        )}
+        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+        {Icon && iconPlacement === "left" && <Icon className="w-3 h-3 mr-2" />}
         <Slottable>{props.children}</Slottable>
         {Icon && iconPlacement === "right" && (
-          <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-2 group-hover:opacity-100">
+          <div className="ml-2">
             <Icon />
           </div>
         )}
