@@ -12,7 +12,7 @@ import {
 import { User } from "lucide-react";
 import Link from "next/link";
 import { SignOut } from "./sign-out";
-import { getAuthUser } from "@/utils/user";
+import { getAuthUser } from "@/utils/user/server";
 
 async function _ProfileDropdown() {
   const userMetadata = await getAuthUser();

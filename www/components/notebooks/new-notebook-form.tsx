@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { TagInput } from "@/components/ui/tag-input";
+import { useCreateNotebook } from "@/api/notebook";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -22,6 +22,8 @@ const formSchema = z.object({
 });
 
 export default function NewNotebookForm() {
+  const { mutate: createNotebook } = useCreateNotebook();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +40,7 @@ export default function NewNotebookForm() {
         ?.map((tag) => tag)
         .join(", ")}`,
     });
+    createNotebook("fnfds");
   }
 
   return (

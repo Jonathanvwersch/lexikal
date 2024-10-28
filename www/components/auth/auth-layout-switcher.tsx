@@ -1,4 +1,4 @@
-import { getAuthUser } from "@/utils/user";
+import { getAuthUser } from "@/utils/user/server";
 
 type Props = {
   ifAuth: React.ReactNode;

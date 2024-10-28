@@ -1,14 +1,9 @@
 import { Notebook } from "@/types/notebook";
 import { useQuery, useMutation, UseQueryResult } from "@tanstack/react-query";
-
-const API_BASE_URL = "http://localhost:8000";
+import { apiFetch } from "./fetch";
 
 export const fetchNotebooks = async (): Promise<Notebook[]> => {
-  const response = await fetch(`${API_BASE_URL}/notebooks`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch notebooks");
-  }
-  return response.json();
+  return apiFetch<Notebook[]>({ endpoint: "/notebooks" });
 };
 
 export const useNotebooks = (): UseQueryResult<Notebook[], Error> => {
@@ -19,15 +14,13 @@ export const useNotebooks = (): UseQueryResult<Notebook[], Error> => {
 };
 
 export const createNotebook = async (name: string): Promise<Notebook> => {
-  const response = await fetch(`${API_BASE_URL}/notebooks`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name }),
+  return apiFetch<Notebook>({
+    endpoint: "/notebooks",
+    options: {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    },
   });
-  if (!response.ok) {
-    throw new Error("Failed to create notebook");
-  }
-  return response.json();
 };
 
 export const useCreateNotebook = () => {
@@ -37,11 +30,9 @@ export const useCreateNotebook = () => {
 };
 
 export const fetchNotebook = async (id: string): Promise<Notebook> => {
-  const response = await fetch(`${API_BASE_URL}/notebooks/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch notebook");
-  }
-  return response.json();
+  return apiFetch<Notebook>({
+    endpoint: `/notebooks/${id}`,
+  });
 };
 
 export const useNotebook = (id: string): UseQueryResult<Notebook, Error> => {

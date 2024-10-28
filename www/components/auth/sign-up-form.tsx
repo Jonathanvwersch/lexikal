@@ -6,9 +6,9 @@ import { APP_SUBHEADING } from "@/constants/app";
 
 export default function SignUpForm() {
   return (
-    <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="lg:p-8">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+    <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="lg:p-8 h-full">
+        <div className="mx-auto flex flex-col justify-center space-y-6 w-[350px] h-full px-4 sm:px-0">
           <h1 className="text-2xl font-semibold text-center">Sign up</h1>
           <div className="flex flex-col gap-2">
             <GoogleAuthButton>Google</GoogleAuthButton>
