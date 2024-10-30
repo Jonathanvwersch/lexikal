@@ -11,13 +11,7 @@ export const Icons = {
       viewBox="0 0 600 600"
       {...props}
     >
-      <foreignObject
-        width="100%"
-        height="100%"
-        x="0"
-        y="0"
-        externalResourcesRequired={true}
-      >
+      <foreignObject width="100%" height="100%" x="0" y="0">
         <div
           className="bg-transparent w-screen max-w-full aspect-square md:w-[350px] md:h-[350px] lg:w-[400px] lg:h-[400px] xl:w-[600px] xl:h-[600px]"
           style={{

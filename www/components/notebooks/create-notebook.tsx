@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-export async function CreateNotebook() {
+export function CreateNotebook() {
   return (
     <Link
       href="/notebooks/new"

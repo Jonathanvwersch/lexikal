@@ -1,5 +1,6 @@
 from supabase import Client
 from ..models import Notebook
+from ..schemas.notebooks import NotebookPostRequest
 from typing import List
 
 async def get_notebooks(db: Client, user_id: str) -> List[Notebook]:
@@ -14,11 +15,12 @@ async def get_notebook(db: Client, notebook_id: str) -> Notebook:
         return Notebook(**response.data)
     return None
 
-async def create_notebook(db: Client, user_id: str) -> Notebook:
+async def create_notebook(db: Client, user_id: str, notebook: NotebookPostRequest) -> Notebook:
     """Create a new notebook"""
     response = db.table('notebooks').insert({
         'user_id': user_id,
-        'name': 'New Notebook',
+        'name': notebook.name,
+        'description': notebook.description
     }).execute()
     if response.data:
         return Notebook(**response.data[0])
