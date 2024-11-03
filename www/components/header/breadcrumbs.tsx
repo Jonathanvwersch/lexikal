@@ -1,7 +1,6 @@
 "use client";
 
-import React, { ReactElement, useMemo } from "react";
-
+import React, { useMemo } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,60 +10,45 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { usePathname } from "next/navigation";
-import { useBreadcrumbsContext } from "@/context/breadcrumbs/use-breadcrumbs-context";
 
 type Props = Readonly<{
-  trailingPath?: string;
+  pathToSwap?: Record<string, string>;
 }>;
 
-export function Breadcrumbs({ trailingPath }: Props) {
-  const routes = usePathname();
-  let fullHref: string | undefined = undefined;
-  const breadcrumbItems: ReactElement[] = [];
-  let breadcrumbPage: ReactElement = <></>;
-  const pathSegments = routes.split("/").filter((segment) => segment !== "");
-  const { trailingPath: contextTrailingPath } = useBreadcrumbsContext();
+export function Breadcrumbs({ pathToSwap = {} }: Props) {
+  const pathname = usePathname();
 
-  useMemo(() => {
-    for (let i = 0; i < pathSegments.length; i++) {
-      const route = pathSegments[i];
-      let href;
+  const breadcrumbItems = useMemo(() => {
+    const pathSegments = pathname.split("/").filter(Boolean);
 
-      href = fullHref ? `${fullHref}/${route}` : `/${route}`;
-      fullHref = href;
+    if (pathSegments.length === 0) {
+      return [];
+    }
 
-      if (i === pathSegments.length - 1) {
-        if (trailingPath || contextTrailingPath) {
-          breadcrumbPage = (
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                {trailingPath || contextTrailingPath}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          );
-        } else {
-          breadcrumbPage = (
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                {route.slice(0, 1).toUpperCase() + route.slice(1)}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          );
-        }
-      } else {
-        breadcrumbItems.push(
+    return pathSegments.reduce<{ element: React.ReactNode; href: string }[]>(
+      (acc, segment, index) => {
+        const href = `/${pathSegments.slice(0, index + 1).join("/")}`;
+        const displayText = pathToSwap[segment] ?? capitalize(segment);
+
+        const element = (
           <React.Fragment key={href}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href={href}>
-                {route.slice(0, 1).toUpperCase() + route.slice(1)}
-              </BreadcrumbLink>
+              {index === pathSegments.length - 1 ? (
+                <BreadcrumbPage>{displayText}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink href={href}>{displayText}</BreadcrumbLink>
+              )}
             </BreadcrumbItem>
           </React.Fragment>
         );
-      }
-    }
-  }, [pathSegments, fullHref]);
+
+        acc.push({ element, href });
+        return acc;
+      },
+      []
+    );
+  }, [pathname, pathToSwap]);
 
   if (breadcrumbItems.length === 0) {
     return null;
@@ -76,10 +60,10 @@ export function Breadcrumbs({ trailingPath }: Props) {
         <BreadcrumbItem>
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {breadcrumbItems}
-        <BreadcrumbSeparator />
-        {breadcrumbPage}
+        {breadcrumbItems.map(({ element }) => element)}
       </BreadcrumbList>
     </Breadcrumb>
   );
 }
+
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

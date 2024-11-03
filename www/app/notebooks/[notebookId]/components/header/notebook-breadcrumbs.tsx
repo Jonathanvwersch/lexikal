@@ -13,5 +13,7 @@ export function NotebookBreadcrumbs({ notebookId }: Props) {
     (notebook) => notebook.id === notebookId
   );
 
-  return <Breadcrumbs trailingPath={notebook?.name ?? ""} />;
+  const pathToSwap = { [notebookId]: notebook?.name };
+
+  return <Breadcrumbs pathToSwap={pathToSwap} />;
 }
