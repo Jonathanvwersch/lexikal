@@ -1,9 +1,5 @@
-import { AccountForm } from "@/components/settings/account-form";
+import { AccountPage } from "./components/account-page";
 
 export default function SettingsAccountPage() {
-  return (
-    <div className="space-y-6 w-full">
-      <AccountForm />
-    </div>
-  );
+  return <AccountPage />;
 }

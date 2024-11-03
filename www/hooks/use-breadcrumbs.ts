@@ -1,11 +1,11 @@
 import { useBreadcrumbsContext } from "@/context/breadcrumbs/use-breadcrumbs-context";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 
 export const useBreadCrumbs = (trailingPath?: string) => {
-  const context = useBreadcrumbsContext();
+  const { setTrailingPath } = useBreadcrumbsContext();
 
-  useEffect(() => {
-    context.setTrailingPath(trailingPath ? trailingPath : "loading");
-    return () => context.setTrailingPath("");
-  }, [trailingPath, context]);
+  useLayoutEffect(() => {
+    setTrailingPath(trailingPath ? trailingPath : "loading");
+    return () => setTrailingPath("");
+  }, [trailingPath, setTrailingPath]);
 };

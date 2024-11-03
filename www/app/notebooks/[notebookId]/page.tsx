@@ -1,3 +1,3 @@
-export default function EditNotebookPage() {
+export default function NotebookPage() {
   return null;
 }

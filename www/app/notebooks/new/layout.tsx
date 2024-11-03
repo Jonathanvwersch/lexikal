@@ -1,4 +1,4 @@
-import { AppLayout } from "@/components/app/layout";
+import { HeaderMainAppLayout } from "@/components/app/header-main-app-layout";
 
 interface NewNotebookLayoutProps {
   children: React.ReactNode;
@@ -7,5 +7,5 @@ interface NewNotebookLayoutProps {
 export default function NewNotebookLayout({
   children,
 }: NewNotebookLayoutProps) {
-  return <AppLayout>{children}</AppLayout>;
+  return <HeaderMainAppLayout>{children}</HeaderMainAppLayout>;
 }

@@ -1,5 +1,5 @@
-import NewNotebookForm from "@/components/notebooks/new-notebook-form";
+import { NewNotebookPage } from "./components/new-notebook-page";
 
-export default function NewNotebookPage() {
-  return <NewNotebookForm />;
+export default function AppNewNotebookPage() {
+  return <NewNotebookPage />;
 }

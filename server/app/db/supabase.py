@@ -5,11 +5,11 @@ from supabase import create_client, Client
 def create_supabase_client() -> Client:
     load_dotenv()
     url: str = os.environ.get("SUPABASE_URL")
-    key: str = os.environ.get("SUPABASE_KEY")
+    server_role_key: str = os.environ.get("SUPABASE_SERVER_ROLE_KEY")
     
-    if not url or not key:
-        raise ValueError("Supabase URL and KEY must be set in the environment variables.")
+    if not url or not server_role_key:
+        raise ValueError("Supabase URL and SERVER ROLE KEY must be set in the environment variables.")
     
-    return create_client(url, key)
+    return create_client(url, server_role_key)
 
 supabase: Client = create_supabase_client()

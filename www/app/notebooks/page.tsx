@@ -1,5 +1,10 @@
-import { redirect } from "next/navigation";
+import { HeaderMainAppLayout } from "@/components/app/header-main-app-layout";
+import { NotebooksPage } from "./components/notebooks-page";
 
-export default function NotebooksPage() {
-  return redirect("/");
+export default async function AppNotebooksPage() {
+  return (
+    <HeaderMainAppLayout>
+      <NotebooksPage />
+    </HeaderMainAppLayout>
+  );
 }

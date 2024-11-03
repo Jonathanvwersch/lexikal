@@ -1,6 +1,7 @@
 import { ProfileDropdown } from "./profile-dropdown";
 import { Breadcrumbs } from "./breadcrumbs";
 import { Logo } from "../ui/logo";
+import { cn } from "@/utils/styles";
 
 export function Header() {
   return (
@@ -28,9 +29,20 @@ export function HeaderRightWrapper({
   return <div className="flex items-center space-x-2 gap-2">{children}</div>;
 }
 
-export function HeaderWrapper({ children }: { children: React.ReactNode }) {
+export function HeaderWrapper({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <header className="border-b py-4 px-3 flex justify-between items-center">
+    <header
+      className={cn(
+        "border-b py-4 px-3 flex justify-between items-center",
+        className
+      )}
+    >
       {children}
     </header>
   );

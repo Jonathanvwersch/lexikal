@@ -13,13 +13,17 @@ import {
 import { usePathname } from "next/navigation";
 import { useBreadcrumbsContext } from "@/context/breadcrumbs/use-breadcrumbs-context";
 
-export function Breadcrumbs() {
+type Props = Readonly<{
+  trailingPath?: string;
+}>;
+
+export function Breadcrumbs({ trailingPath }: Props) {
   const routes = usePathname();
   let fullHref: string | undefined = undefined;
   const breadcrumbItems: ReactElement[] = [];
   let breadcrumbPage: ReactElement = <></>;
   const pathSegments = routes.split("/").filter((segment) => segment !== "");
-  const { trailingPath } = useBreadcrumbsContext();
+  const { trailingPath: contextTrailingPath } = useBreadcrumbsContext();
 
   useMemo(() => {
     for (let i = 0; i < pathSegments.length; i++) {
@@ -30,10 +34,12 @@ export function Breadcrumbs() {
       fullHref = href;
 
       if (i === pathSegments.length - 1) {
-        if (trailingPath) {
+        if (trailingPath || contextTrailingPath) {
           breadcrumbPage = (
             <BreadcrumbItem>
-              <BreadcrumbPage>{trailingPath}</BreadcrumbPage>
+              <BreadcrumbPage>
+                {trailingPath || contextTrailingPath}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           );
         } else {

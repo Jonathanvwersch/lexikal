@@ -13,18 +13,20 @@ async def lifespan():
     await supabase.client.close()
 
 
-app = FastAPI(redirect_slashes=False, root_path="/api/v1")
+app = FastAPI(root_path="/api/v1", redirect_slashes=False)
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(notebooks_router)
+app.router.redirect_slashes = False 
+
 
 @app.get("/")
 async def root():
