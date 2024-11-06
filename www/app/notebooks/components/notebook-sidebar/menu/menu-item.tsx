@@ -39,7 +39,7 @@ export function MenuItem({ href, Icon, label, onEdit, onDelete }: Props) {
         </Link>
       </SidebarMenuButton>
 
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <SidebarMenuAction>
             <Ellipsis />
@@ -62,7 +62,7 @@ export function MenuItem({ href, Icon, label, onEdit, onDelete }: Props) {
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </SidebarMenuItem>
   );
 }

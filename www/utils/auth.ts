@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { createClient } from "./supabase/client";
 
 export async function handleSignOut() {
@@ -17,7 +18,14 @@ export async function handleGoogleLogin(redirectTo?: string) {
         }`,
       },
     });
-    if (error) throw error;
+    if (error) {
+      toast({
+        title: "Something went wrong.",
+        description: error.message,
+      });
+
+      return { error: true };
+    }
   } catch (error) {
     console.error("Error logging in with Google:", error);
   }

@@ -1,20 +1,42 @@
 "use client";
 // Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { toast } from "sonner";
 
 import {
   isServer,
   QueryClient,
   QueryClientProvider,
+  QueryCache,
+  MutationCache,
 } from "@tanstack/react-query";
 
 function makeQueryClient() {
   return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => {
+        toast.error("Error", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "Uh oh, something went wrong",
+        });
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        toast.error("Error", {
+          description:
+            error instanceof Error
+              ? error.message
+              : "Something went wrong. Please try again.",
+        });
+      },
+    }),
     defaultOptions: {
       queries: {
-        // With SSR, we usually want to set some default staleTime
-        // above 0 to avoid refetching immediately on the client
         staleTime: 60 * 1000,
+        retry: 1,
       },
     },
   });

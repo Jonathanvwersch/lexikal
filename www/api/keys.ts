@@ -3,6 +3,11 @@ export const keys = {
     get: "get-notebooks",
     post: "post-notebook",
   },
+  contexts: {
+    get: "get-contexts",
+    postMetadata: "post-context-metadata",
+    uploadFile: "upload-context-file",
+  },
 } as const;
 
 type NestedKeys<T> = T extends Record<string, unknown>

@@ -12,7 +12,7 @@ import {
 import { usePathname } from "next/navigation";
 
 type Props = Readonly<{
-  pathToSwap?: Record<string, string>;
+  pathToSwap?: Record<string, string | undefined>;
 }>;
 
 export function Breadcrumbs({ pathToSwap = {} }: Props) {
@@ -28,7 +28,7 @@ export function Breadcrumbs({ pathToSwap = {} }: Props) {
     return pathSegments.reduce<{ element: React.ReactNode; href: string }[]>(
       (acc, segment, index) => {
         const href = `/${pathSegments.slice(0, index + 1).join("/")}`;
-        const displayText = pathToSwap[segment] ?? capitalize(segment);
+        const displayText = pathToSwap[segment] || capitalize(segment);
 
         const element = (
           <React.Fragment key={href}>

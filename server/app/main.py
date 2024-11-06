@@ -3,19 +3,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .db import supabase
 import uvicorn
-from .api.notebooks import router as notebooks_router
+from .api.notebooks.notebooks import router as notebooks_router
 
 @asynccontextmanager
 async def lifespan():
-    # Startup
     yield
-    # Shutdown
     await supabase.client.close()
 
 
 app = FastAPI(root_path="/api/v1", redirect_slashes=False)
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://localhost:3001"],

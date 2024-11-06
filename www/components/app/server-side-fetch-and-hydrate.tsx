@@ -29,8 +29,6 @@ export default async function ServerSideFetchAndHydrate({
     )
   );
 
-  console.log(queryClient.getQueryState(queryKeys));
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {children}

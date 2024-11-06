@@ -1,15 +1,13 @@
 import {
-  createNewNotebookNotebooksPost,
+  createNotebookNotebooksPost,
   listNotebooksNotebooksGet,
 } from "@/generated/services.gen";
-import { CreateNewNotebookNotebooksPostData } from "@/generated/types.gen";
+import { CreateNotebookNotebooksPostData } from "@/generated/types.gen";
 
 import { clientAuthFetch } from "./auth";
 
-export const postNotebook = async (
-  data: CreateNewNotebookNotebooksPostData
-) => {
-  const res = await clientAuthFetch(createNewNotebookNotebooksPost, data);
+export const postNotebook = async (data: CreateNotebookNotebooksPostData) => {
+  const res = await clientAuthFetch(createNotebookNotebooksPost, data);
   return res.data;
 };
 

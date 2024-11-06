@@ -1,7 +1,6 @@
 from supabase import Client
 from ..models import Notebook
 from ..schemas.notebooks import NotebookPostRequest, NotebooksGetResponse, NotebookGetResponse
-from typing import List
 
 async def get_notebooks(db: Client, user_id: str) -> NotebooksGetResponse:
     """Get all notebooks for a user"""
@@ -16,7 +15,7 @@ async def get_notebook(db: Client, notebook_id: str) -> Notebook:
         return Notebook(**response.data)
     return None
 
-async def create_notebook(db: Client, user_id: str, notebook: NotebookPostRequest) -> Notebook:
+async def post_notebook(db: Client, user_id: str, notebook: NotebookPostRequest) -> Notebook:
     """Create a new notebook"""
     notebook_data = {
         'name': notebook.name,

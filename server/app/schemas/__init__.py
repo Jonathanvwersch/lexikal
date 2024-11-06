@@ -1,7 +1,6 @@
 from .notebooks import (
     NotebookPostRequest,
     NotebookPostResponse,
-    NotebookPatchRequest,
     NotebookGetResponse,
     NotebooksGetResponse
 )
@@ -9,7 +8,6 @@ from .notebooks import (
 __all__ = [
     "NotebookPostRequest",
     "NotebookPostResponse",
-    "NotebookPatchRequest",
     "NotebookGetResponse",
     "NotebooksGetResponse"
 ]
