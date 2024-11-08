@@ -9,14 +9,15 @@ import { NotebookBreadcrumbs } from "./notebook-breadcrumbs";
 
 type Props = Readonly<{
   notebookId: string;
+  contextId?: string;
 }>;
 
-export function NotebookHeader({ notebookId }: Props) {
+export function NotebookHeader({ notebookId, contextId }: Props) {
   return (
     <HeaderWrapper className="py-[18px]">
       <HeaderLeftWrapper>
         <SidebarTrigger size="icon" />
-        <NotebookBreadcrumbs notebookId={notebookId} />
+        <NotebookBreadcrumbs notebookId={notebookId} contextId={contextId} />
       </HeaderLeftWrapper>
       <HeaderRightWrapper>
         <ProfileDropdown />
