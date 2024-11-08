@@ -12,8 +12,17 @@ type Props = Readonly<{
 export function NotebookChatDrawer({ isOpen, onClose }: Props) {
   return (
     <div
-      className="absolute px-8 pt-8 mx-2 top-2 bottom-0 right-0 left-0 pb-32 bg-muted/25 rounded-tr-[8px] rounded-tl-[8px] bg-background border-gray-200 border-solid border-[1px] transition-all duration-500 ease-in-out"
-      style={{ transform: isOpen ? "translateY(0)" : "translateY(100%)" }}
+      className={`
+        absolute px-3 pt-8 mx-3 my-2 
+        bg-muted/25 rounded-tr-[8px] rounded-tl-[8px] 
+        border-gray-200 border-solid border-[1px] 
+        top-0 bottom-0 h-full
+        transition-all duration-500 ease-in-out
+        left-0 right-0
+      `}
+      style={{
+        transform: isOpen ? "translateY(100%)" : "translateY(0)",
+      }}
     >
       <Button
         size="icon"

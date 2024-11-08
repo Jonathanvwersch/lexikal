@@ -18,9 +18,6 @@ export function NotebookBreadcrumbs({ notebookId, contextId }: Props) {
   const context = contextData?.contexts.find(
     (context) => context.id === contextId
   );
-  console.log("contextId", contextId);
-  console.log("context", context);
-  console.log("notebook", notebook);
 
   const pathToSwap = {
     [notebookId]: notebook?.name,

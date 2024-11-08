@@ -88,6 +88,7 @@ export default function FileDropzone({
 
   const onInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
       if (e.target.files && e.target.files[0]) {
         handleFiles(e.target.files);
       }
@@ -108,7 +109,7 @@ export default function FileDropzone({
         dragActive ? "border-primary" : "border-input"
       } hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
     >
-      <CardContent>
+      <CardContent className="p-4">
         <div
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
@@ -118,7 +119,7 @@ export default function FileDropzone({
           role="button"
           className="flex items-center flex-col justify-center"
         >
-          <UploadCloud className="w-10 h-10 mb-4 text-muted-foreground" />
+          <UploadCloud className="w-6 h-6 mb-4 text-muted-foreground" />
           <Label
             htmlFor="fileInput"
             className="text-sm text-muted-foreground cursor-pointer"
@@ -159,7 +160,10 @@ export default function FileDropzone({
                   variant="ghost"
                   size="icon"
                   className="h-4 w-4 ml-1 p-0"
-                  onClick={() => removeFile(file)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeFile(file);
+                  }}
                 >
                   <X className="h-3 w-3" />
                   <span className="sr-only">Remove</span>

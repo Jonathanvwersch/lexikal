@@ -15,6 +15,7 @@ function makeQueryClient() {
   return new QueryClient({
     queryCache: new QueryCache({
       onError: (error) => {
+        console.error(error);
         toast.error("Error", {
           description:
             error instanceof Error
@@ -25,6 +26,7 @@ function makeQueryClient() {
     }),
     mutationCache: new MutationCache({
       onError: (error) => {
+        console.error(error);
         toast.error("Error", {
           description:
             error instanceof Error
