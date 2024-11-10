@@ -1,6 +1,6 @@
 import { getNotebooks } from "@/api/server/notebooks";
 import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hydrate";
-
+import { queryKeys } from "@/api/keys";
 export default function NotebooksLayout({
   children,
 }: {
@@ -8,7 +8,7 @@ export default function NotebooksLayout({
 }) {
   return (
     <ServerSideFetchAndHydrate
-      queryKeys={["get-notebooks"]}
+      queryKeys={queryKeys.notebooks.get}
       queryFns={[getNotebooks]}
     >
       {children}

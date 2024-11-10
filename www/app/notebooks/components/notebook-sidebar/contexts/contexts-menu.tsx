@@ -5,15 +5,16 @@ import { MenuParentItem } from "../menu/menu-parent-item";
 import { MenuItem } from "../menu/menu-item";
 import { useParams } from "next/navigation";
 import { AddContext } from "./add-context";
-import { useGetContexts } from "@/api/contexts";
+import { useCacheQuery } from "@/hooks/use-cache-query";
+import { queryKeys } from "@/api/keys";
+import { ContextsGetResponse } from "@/generated/types.gen";
 
 export function ContextsMenu() {
   const params = useParams();
   const notebookId = params.notebookId as string;
   const basePath = `/notebooks/${notebookId}/contexts`;
-
-  const { data } = useGetContexts({
-    path: { notebookId },
+  const contextData = useCacheQuery<ContextsGetResponse>({
+    queryKey: queryKeys.contexts.get(notebookId),
   });
 
   return (
@@ -21,9 +22,11 @@ export function ContextsMenu() {
       href={basePath}
       Icon={MessageSquareQuote}
       label="Contexts"
+      emptyMessage="No contexts found"
       AddComponent={<AddContext />}
+      defaultOpen
     >
-      {data?.contexts?.map((context) => (
+      {contextData?.contexts?.map((context) => (
         <MenuItem
           key={context.id}
           href={`${basePath}/${context.id}`}

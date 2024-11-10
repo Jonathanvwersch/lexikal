@@ -17,5 +17,4 @@ class Context(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     notebook_id = Column(Integer, ForeignKey("notebooks.id"))
-    file_url = Column(String)
     type = Column(Enum(ContextType), nullable=False)

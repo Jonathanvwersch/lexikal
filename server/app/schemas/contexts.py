@@ -12,10 +12,10 @@ class ContextBase(CamelCaseModel):
 class ContextId(CamelCaseModel):
     id: str = Field(..., description="The unique identifier of the context")
 
-class ContextFile(CamelCaseModel):
-    file_url: str | None = Field(None, description="The URL of the file")  
+class ContextUploadSignedUrl(CamelCaseModel):
+    signed_upload_url: str | None = Field(None, description="A signed URL of the file")  
 
-class Context(ContextBase, ContextId, ContextFile):
+class Context(ContextBase, ContextId):
     pass
 
 ## GET
@@ -31,17 +31,20 @@ class ContextMetadataBase(CamelCaseModel):
     description: str | None = Field(None, description="The description of the context")
     type: ContextType = Field(..., description="The type of the context")
 
+class ContextMetadataSignedUploadUrl(CamelCaseModel):
+    signed_upload_url: str | None = Field(None, description="A signed URL for uploading a file")
+
 class ContextMetadataPostRequest(ContextMetadataBase):
     pass
 
-class ContextMetadataPostResponse(ContextId, ContextBase, CamelCaseModel):
+class ContextMetadataPostResponse(ContextId, ContextBase, ContextMetadataSignedUploadUrl, CamelCaseModel):
     pass
 
 ## POST FILE
 class ContextFileUploadPostRequest(ContextId, CamelCaseModel):
     name: str = Field(..., description="The name of the context")
 
-class ContextFileUploadPostResponse(ContextId, ContextBase, CamelCaseModel):
+class ContextFileUploadPostResponse(ContextMetadataSignedUploadUrl, CamelCaseModel):
     pass
 
 

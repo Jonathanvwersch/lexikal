@@ -1,24 +1,41 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getNotebooks, postNotebook } from "./client/notebooks";
+import { queryKeys } from "./keys";
+import {
+  CreateNotebookNotebooksPostData,
+  CreateNotebookNotebooksPostError,
+  ListNotebooksNotebooksGetError,
+  NotebookPostResponse,
+  NotebooksGetResponse,
+} from "@/generated/types.gen";
 import { MutationOptions, QueryOptions } from "./types";
-import { postNotebook, getNotebooks } from "./client/notebooks";
-import { keys } from "./keys";
 
 export const usePostNotebook = (
-  options: MutationOptions<typeof postNotebook>
+  options?: MutationOptions<
+    typeof postNotebook,
+    CreateNotebookNotebooksPostError
+  >
 ) => {
-  return useMutation({
+  return useMutation<
+    NotebookPostResponse | undefined,
+    CreateNotebookNotebooksPostError,
+    CreateNotebookNotebooksPostData
+  >({
     ...options,
     mutationFn: postNotebook,
-    mutationKey: [keys.notebooks.post],
+    mutationKey: [queryKeys.notebooks.post],
   });
 };
 
 export const useGetNotebooks = (
-  options?: QueryOptions<typeof getNotebooks>
+  options?: QueryOptions<typeof getNotebooks, ListNotebooksNotebooksGetError>
 ) => {
-  return useQuery({
+  return useQuery<
+    NotebooksGetResponse | undefined,
+    ListNotebooksNotebooksGetError
+  >({
     ...options,
-    queryKey: [keys.notebooks.get],
+    queryKey: [queryKeys.notebooks.get],
     queryFn: getNotebooks,
   });
 };

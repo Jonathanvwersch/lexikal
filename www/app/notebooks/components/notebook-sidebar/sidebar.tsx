@@ -21,7 +21,7 @@ export function NotebookSidebar({
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="px-1 py-2">
-            <Logo asLink={false} iconClassName="w-8 h-8" />
+            <Logo iconClassName="w-8 h-8" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

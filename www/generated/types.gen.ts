@@ -4,11 +4,14 @@ export type BodyUploadFileNotebooksNotebookIdContextsContextIdUploadPost = {
     file: (Blob | File);
 };
 
-export type ContextGetResponse = {
+export type ContextFileUploadPostResponse = {
     /**
-     * The URL of the file
+     * A signed URL for uploading a file
      */
-    fileUrl?: (string | null);
+    signedUploadUrl?: (string | null);
+};
+
+export type ContextGetResponse = {
     /**
      * The unique identifier of the context
      */
@@ -43,6 +46,10 @@ export type ContextMetadataPostRequest = {
 };
 
 export type ContextMetadataPostResponse = {
+    /**
+     * A signed URL for uploading a file
+     */
+    signedUploadUrl?: (string | null);
     /**
      * The name of the context
      */
@@ -185,10 +192,11 @@ export type UploadFileNotebooksNotebookIdContextsContextIdUploadPostData = {
     body: BodyUploadFileNotebooksNotebookIdContextsContextIdUploadPost;
     path: {
         context_id: string;
+        notebook_id: string;
     };
 };
 
-export type UploadFileNotebooksNotebookIdContextsContextIdUploadPostResponse = (unknown);
+export type UploadFileNotebooksNotebookIdContextsContextIdUploadPostResponse = (ContextFileUploadPostResponse);
 
 export type UploadFileNotebooksNotebookIdContextsContextIdUploadPostError = (HttpValidationError);
 

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from ....middleware.auth import get_current_user
 from ....db import get_db
-from ....crud import post_context_metadata, get_contexts, update_context_file_url, get_notebook
+from ....crud import post_context_metadata, get_contexts, get_notebook
 from ....schemas.contexts import ContextsGetResponse, ContextMetadataPostRequest, ContextMetadataPostResponse, ContextFileUploadPostRequest, ContextFileUploadPostResponse
 from supabase import Client
-from ....utils import get_context_by_id, save_file_to_supabase
+from ....utils import get_context_by_id, save_file_to_supabase, generate_signed_upload_url
 
 router = APIRouter()
 
@@ -29,13 +29,27 @@ async def upload_metadata(
         "description": context.description,
         "notebook_id": notebook_id,
         "type": "pdf", 
-        "file_url": None 
     }
 
     created_context = await post_context_metadata(db, context_data)
-    return created_context
 
-@router.post("/{context_id}/upload")
+    signed_upload_url = await generate_signed_upload_url(
+        db=db,
+        storage_path=f"{notebook_id}/{created_context.id}/"
+    )
+    print("signed_upload_url", signed_upload_url)
+    context_data["signed_upload_url"] = signed_upload_url
+    context
+
+    return ContextMetadataPostResponse(
+        id=created_context.id,
+        name=context.name,
+        description=context.description,
+        type="pdf",
+        signed_upload_url=signed_upload_url
+    )
+
+@router.post("/{context_id}/upload", response_model=ContextFileUploadPostResponse)
 async def upload_file(
     request: Request,
     notebook_id: str,
@@ -53,8 +67,30 @@ async def upload_file(
     if not existing_context:
         raise HTTPException(status_code=404, detail="Context not found")
 
-    file_content = await file.read()
-    file_url = await save_file_to_supabase(file_content, file.filename)
+    if not file.content_type == "application/pdf": 
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
 
-    updated_context = await update_context_file_url(db, context_id, file_url)
-    return updated_context
+    try:
+        file_content = await file.read()
+        
+        await save_file_to_supabase(
+            db=db,
+            file_content=file_content,
+            filename=file.filename,
+            storage_path=f"{notebook_id}/{context_id}/{file.filename}",
+            content_type="application/pdf"
+        )
+
+        signed_upload_url = await generate_signed_upload_url(
+            db=db,
+            storage_path=f"{notebook_id}/{context_id}/{file.filename}"
+        )
+
+        print("signed_upload_url", signed_upload_url)
+        
+        return ContextFileUploadPostResponse(
+            signed_upload_url
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process upload: {str(e)}")

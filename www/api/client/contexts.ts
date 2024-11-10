@@ -33,7 +33,9 @@ export const getContexts = async (
 };
 
 export const uploadContextFile = async (
-  data: UploadFileNotebooksNotebookIdContextsContextIdUploadPostData
+  data: UploadFileNotebooksNotebookIdContextsContextIdUploadPostData & {
+    path: { context_id: string; notebook_id: string };
+  }
 ) => {
   const res = await clientAuthFetch(
     uploadFileNotebooksNotebookIdContextsContextIdUploadPost,

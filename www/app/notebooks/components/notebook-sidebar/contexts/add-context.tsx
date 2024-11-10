@@ -17,7 +17,7 @@ import { SidebarMenuAction } from "@/components/ui/sidebar";
 import { Plus } from "lucide-react";
 import { useCallback } from "react";
 import { useState } from "react";
-import { usePostContextMetadata, useUploadContextFile } from "@/api/contexts";
+import { usePostContextMetadata } from "@/api/contexts";
 import { useParams } from "next/navigation";
 
 export function AddContext() {
@@ -27,27 +27,39 @@ export function AddContext() {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const notebookId = params.notebookId as string;
-
-  const { mutate: uploadContextFile, isPending: isUploadingFile } =
-    useUploadContextFile({
-      onSuccess: () => {
-        setOpen(false);
-        setName("");
-        setDescription("");
-        setFiles([]);
-      },
-    });
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const { mutate: postContextMetadata, isPending: isUploadingMetadata } =
     usePostContextMetadata({
-      onSuccess: (context) => {
-        if (!context) {
+      onSuccess: async (context) => {
+        const signedUploadUrl = context?.signedUploadUrl;
+        const file = files[0];
+
+        if (!signedUploadUrl || !file) {
           return;
         }
-        uploadContextFile({
-          path: { context_id: context.id },
-          body: { file: files[0] },
-        });
+        setUploadingFile(true);
+
+        try {
+          const response = await fetch(signedUploadUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": file.type,
+            },
+            body: file,
+          });
+
+          if (!response.ok) {
+            throw new Error("File upload failed");
+          }
+
+          console.log("File uploaded successfully");
+        } catch (error) {
+          console.error("Upload error:", error);
+        } finally {
+          setUploadingFile(false);
+          setOpen(false);
+        }
       },
     });
 
@@ -67,7 +79,7 @@ export function AddContext() {
     });
   };
 
-  const isUploading = isUploadingMetadata || isUploadingFile;
+  const isUploading = isUploadingMetadata || uploadingFile;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

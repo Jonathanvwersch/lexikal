@@ -1,8 +1,12 @@
 "use client";
 
-import { useGetContexts } from "@/api/contexts";
-import { useGetNotebooks } from "@/api/notebooks";
+import { queryKeys } from "@/api/keys";
 import { Breadcrumbs } from "@/components/header/breadcrumbs";
+import {
+  ContextsGetResponse,
+  NotebooksGetResponse,
+} from "@/generated/types.gen";
+import { useCacheQuery } from "@/hooks/use-cache-query";
 
 type Props = Readonly<{
   notebookId: string;
@@ -10,9 +14,14 @@ type Props = Readonly<{
 }>;
 
 export function NotebookBreadcrumbs({ notebookId, contextId }: Props) {
-  const { data } = useGetNotebooks();
-  const { data: contextData } = useGetContexts({ path: { notebookId } });
-  const notebook = data?.notebooks.find(
+  const contextData = useCacheQuery<ContextsGetResponse>({
+    queryKey: queryKeys.contexts.get(notebookId),
+  });
+  const notebookData = useCacheQuery<NotebooksGetResponse>({
+    queryKey: queryKeys.notebooks.get,
+  });
+
+  const notebook = notebookData?.notebooks.find(
     (notebook) => notebook.id === notebookId
   );
   const context = contextData?.contexts.find(

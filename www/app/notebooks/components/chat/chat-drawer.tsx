@@ -1,5 +1,3 @@
-"use client";
-
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatMessages } from "./chat-messages";
@@ -21,7 +19,7 @@ export function NotebookChatDrawer({ isOpen, onClose }: Props) {
         left-0 right-0
       `}
       style={{
-        transform: isOpen ? "translateY(100%)" : "translateY(0)",
+        transform: isOpen ? "translateY(0%)" : "translateY(100%)",
       }}
     >
       <Button

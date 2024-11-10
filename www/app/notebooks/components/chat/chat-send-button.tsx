@@ -1,17 +1,20 @@
 import { useCallback } from "react";
 import { Button } from "../../../../components/ui/button";
 import { SendHorizontal } from "lucide-react";
+import { useKeyPress } from "@/hooks/use-key-press";
 
 type Props = Readonly<{ onSend: () => void }>;
 
 export function NotebookChatSendButton({ onSend }: Props) {
   const handleSend = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
+    (e?: React.MouseEvent | KeyboardEvent) => {
+      e?.preventDefault();
       onSend();
     },
     [onSend]
   );
+
+  useKeyPress("Enter", handleSend);
 
   return (
     <Button

@@ -9,7 +9,7 @@ import {
 
 type Props = {
   children: React.ReactNode;
-  queryKeys: QueryKey[];
+  queryKeys: QueryKey;
   queryFns: QueryFunction[];
 };
 

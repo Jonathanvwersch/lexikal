@@ -12,6 +12,7 @@ export default async function NotebookLayout({
   params,
 }: NotebookLayoutProps) {
   const { notebookId, contextId } = await params;
+
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
       <NotebookHeader notebookId={notebookId} contextId={contextId} />

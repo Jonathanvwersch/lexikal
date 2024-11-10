@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../../../../components/ui/dropdown-menu";
+import { usePathname } from "next/navigation";
 
 const items: { title: "Edit" | "Delete"; icon: LucideIcon }[] = [
   { title: "Edit", icon: Pencil },
@@ -30,9 +31,15 @@ type Props = Readonly<{
 }>;
 
 export function MenuItem({ href, Icon, label, onEdit, onDelete }: Props) {
+  const pathname = usePathname();
+  const isActive = pathname.includes(href);
+
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild className="">
+      <SidebarMenuButton
+        asChild
+        className={`${isActive ? "bg-accent text-accent-foreground" : ""}`}
+      >
         <Link href={href}>
           <Icon className="!w-3 !h-3" />
           <span>{label}</span>
