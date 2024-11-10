@@ -1,12 +1,9 @@
 import {
   listContextsNotebooksNotebookIdContextsGet,
-  uploadFileNotebooksNotebookIdContextsContextIdUploadPost,
   uploadMetadataNotebooksNotebookIdContextsMetadataPost,
 } from "@/generated/services.gen";
 import {
-  BodyUploadFileNotebooksNotebookIdContextsContextIdUploadPost,
   ListContextsNotebooksNotebookIdContextsGetData,
-  UploadFileNotebooksNotebookIdContextsContextIdUploadPostData,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
 } from "@/generated/types.gen";
 
@@ -27,18 +24,6 @@ export const getContexts = async (
 ) => {
   const res = await clientAuthFetch(
     listContextsNotebooksNotebookIdContextsGet,
-    data
-  );
-  return res.data;
-};
-
-export const uploadContextFile = async (
-  data: UploadFileNotebooksNotebookIdContextsContextIdUploadPostData & {
-    path: { context_id: string; notebook_id: string };
-  }
-) => {
-  const res = await clientAuthFetch(
-    uploadFileNotebooksNotebookIdContextsContextIdUploadPost,
     data
   );
   return res.data;

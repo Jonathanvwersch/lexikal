@@ -2,7 +2,7 @@ import NotebookSidebarLayout from "@/app/notebooks/components/notebook-sidebar/s
 import { SidebarInset } from "@/components/ui/sidebar";
 import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hydrate";
 import { getContexts } from "@/api/server/contexts";
-import { queryKeys } from "@/api/keys";
+import { queryKeys } from "@/react-query/keys";
 import { NotebookParams } from "./types";
 
 interface NotebookLayoutProps {

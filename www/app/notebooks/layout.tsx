@@ -1,6 +1,6 @@
 import { getNotebooks } from "@/api/server/notebooks";
 import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hydrate";
-import { queryKeys } from "@/api/keys";
+import { queryKeys } from "@/react-query/keys";
 export default function NotebooksLayout({
   children,
 }: {

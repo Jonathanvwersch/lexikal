@@ -1,6 +1,6 @@
 "use client";
 
-import { queryKeys } from "@/api/keys";
+import { queryKeys } from "@/react-query/keys";
 import { Breadcrumbs } from "@/components/header/breadcrumbs";
 import {
   ContextsGetResponse,

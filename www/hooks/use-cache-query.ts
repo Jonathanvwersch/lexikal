@@ -1,5 +1,5 @@
-import { QueryKey } from "@/api/keys";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@/react-query/keys";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type Props = Readonly<{
   queryKey: QueryKey;
@@ -7,7 +7,13 @@ type Props = Readonly<{
 
 export function useCacheQuery<T>({ queryKey }: Props) {
   const queryClient = useQueryClient();
-
-  const cachedData = queryClient.getQueryData<T>(queryKey);
-  return cachedData;
+  const { data } = useQuery<T>({
+    queryKey,
+    initialData: () => queryClient.getQueryData<T>(queryKey),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+  });
+  return data;
 }

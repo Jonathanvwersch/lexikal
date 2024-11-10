@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getNotebooks, postNotebook } from "./client/notebooks";
+import { getNotebooks, postNotebook } from "../api/client/notebooks";
 import { queryKeys } from "./keys";
 import {
   CreateNotebookNotebooksPostData,
@@ -23,7 +23,6 @@ export const usePostNotebook = (
   >({
     ...options,
     mutationFn: postNotebook,
-    mutationKey: [queryKeys.notebooks.post],
   });
 };
 

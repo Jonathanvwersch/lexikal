@@ -15,9 +15,9 @@ async def get_contexts(db: Client, notebook_id: str) -> ContextsGetResponse:
     contexts = [ContextGetResponse(**context) for context in response.data]
     return ContextsGetResponse(contexts=contexts)
 
-async def post_context_metadata(db: Client, context: ContextInsert) -> ContextMetadataPostResponse:
+async def post_context_metadata(db: Client, context: ContextInsert) -> Context:
     """Uploads context metadata to the database"""
     response = db.table('contexts').insert(context).execute()
     if response.data:
-        return ContextMetadataPostResponse(**response.data[0])
+        return Context(**response.data[0])
     return None

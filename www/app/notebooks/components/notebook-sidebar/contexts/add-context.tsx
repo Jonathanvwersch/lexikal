@@ -12,13 +12,17 @@ import FileDropzone from "@/components/ui/file-dropzone";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import omit from "lodash.omit";
 
 import { SidebarMenuAction } from "@/components/ui/sidebar";
 import { Plus } from "lucide-react";
 import { useCallback } from "react";
 import { useState } from "react";
-import { usePostContextMetadata } from "@/api/contexts";
+import { usePostContextMetadata } from "@/react-query/contexts";
 import { useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/react-query/keys";
+import { ContextsGetResponse } from "@/generated/types.gen";
 
 export function AddContext() {
   const [files, setFiles] = useState<File[]>([]);
@@ -28,6 +32,14 @@ export function AddContext() {
   const params = useParams();
   const notebookId = params.notebookId as string;
   const [uploadingFile, setUploadingFile] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleClose = () => {
+    setOpen(false);
+    setFiles([]);
+    setName("");
+    setDescription("");
+  };
 
   const { mutate: postContextMetadata, isPending: isUploadingMetadata } =
     usePostContextMetadata({
@@ -38,27 +50,33 @@ export function AddContext() {
         if (!signedUploadUrl || !file) {
           return;
         }
+
         setUploadingFile(true);
 
         try {
-          const response = await fetch(signedUploadUrl, {
+          await fetch(signedUploadUrl, {
             method: "PUT",
             headers: {
               "Content-Type": file.type,
             },
             body: file,
           });
-
-          if (!response.ok) {
-            throw new Error("File upload failed");
-          }
-
-          console.log("File uploaded successfully");
         } catch (error) {
           console.error("Upload error:", error);
         } finally {
           setUploadingFile(false);
-          setOpen(false);
+          queryClient.setQueryData<ContextsGetResponse>(
+            queryKeys.contexts.get(notebookId),
+            (oldData) => {
+              const newContext = omit(context, "signedUpload");
+              return {
+                contexts: oldData
+                  ? [...oldData.contexts, newContext]
+                  : [newContext],
+              };
+            }
+          );
+          handleClose();
         }
       },
     });
@@ -75,6 +93,7 @@ export function AddContext() {
         name,
         description,
         type: "pdf",
+        originalFileName: files[0].name,
       },
     });
   };
@@ -121,6 +140,7 @@ export function AddContext() {
               />
             </div>
             <FileDropzone
+              required
               onFileChange={handleFileChange}
               files={files}
               acceptedFileTypes={["application/pdf"]}

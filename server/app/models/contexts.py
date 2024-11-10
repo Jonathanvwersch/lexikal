@@ -18,3 +18,4 @@ class Context(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     notebook_id = Column(Integer, ForeignKey("notebooks.id"))
     type = Column(Enum(ContextType), nullable=False)
+    original_file_name = Column(String)

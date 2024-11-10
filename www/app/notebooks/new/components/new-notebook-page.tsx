@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { usePostNotebook } from "@/api/notebooks";
+import { usePostNotebook } from "@/react-query/notebooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

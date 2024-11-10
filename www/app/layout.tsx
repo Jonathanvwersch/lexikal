@@ -16,6 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <style>{`
+          nextjs-portal {
+            display: none;
+          }
+        `}</style>
+      </head>
       <body
         suppressHydrationWarning
         className={cn("min-h-screen bg-background font-sans antialiased")}

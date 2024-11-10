@@ -1,13 +1,13 @@
 "use client";
 
-import { MessageSquareQuote, Quote } from "lucide-react";
 import { MenuParentItem } from "../menu/menu-parent-item";
 import { MenuItem } from "../menu/menu-item";
 import { useParams } from "next/navigation";
 import { AddContext } from "./add-context";
 import { useCacheQuery } from "@/hooks/use-cache-query";
-import { queryKeys } from "@/api/keys";
+import { queryKeys } from "@/react-query/keys";
 import { ContextsGetResponse } from "@/generated/types.gen";
+import { RESOURCE_ICON_MAP } from "@/app/notebooks/constants";
 
 export function ContextsMenu() {
   const params = useParams();
@@ -20,22 +20,24 @@ export function ContextsMenu() {
   return (
     <MenuParentItem
       href={basePath}
-      Icon={MessageSquareQuote}
+      Icon={RESOURCE_ICON_MAP.context.parent}
       label="Contexts"
       emptyMessage="No contexts found"
       AddComponent={<AddContext />}
       defaultOpen
     >
-      {contextData?.contexts?.map((context) => (
-        <MenuItem
-          key={context.id}
-          href={`${basePath}/${context.id}`}
-          Icon={Quote}
-          label={context.name}
-          onEdit={() => {}}
-          onDelete={() => {}}
-        />
-      ))}
+      {contextData?.contexts
+        ?.sort((a, b) => a.name.localeCompare(b.name))
+        .map((context) => (
+          <MenuItem
+            key={context.id}
+            href={`${basePath}/${context.id}`}
+            Icon={RESOURCE_ICON_MAP.context.child}
+            label={context.name}
+            onEdit={() => {}}
+            onDelete={() => {}}
+          />
+        ))}
     </MenuParentItem>
   );
 }

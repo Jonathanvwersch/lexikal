@@ -1,50 +1,29 @@
+from storage3.types import SignedUploadURL
 from ..models.contexts import ContextType
 from pydantic import Field
 from .base import CamelCaseModel
 
-## BASE
-
 class ContextBase(CamelCaseModel):
     name: str = Field(..., description="The name of the context")
     description: str | None = Field(None, description="The description of the context")
-    type: ContextType = Field(..., description="The type of the context, e.g., PDF, text")
+    type: ContextType = Field(..., description="The type of the context, e.g., PDF, text") 
+    original_file_name: str = Field(..., description="The name of the context file")
 
-class ContextId(CamelCaseModel):
+class Context(ContextBase):
     id: str = Field(..., description="The unique identifier of the context")
 
-class ContextUploadSignedUrl(CamelCaseModel):
-    signed_upload_url: str | None = Field(None, description="A signed URL of the file")  
-
-class Context(ContextBase, ContextId):
-    pass
-
-## GET
-class ContextGetResponse(Context, CamelCaseModel):
+class ContextGetResponse(Context):
+    """Response model for getting a single context"""
     pass
 
 class ContextsGetResponse(CamelCaseModel):
+    """Response model for getting multiple contexts"""
     contexts: list[ContextGetResponse] = Field(..., description="The list of contexts")
 
-## POST METADATA
-class ContextMetadataBase(CamelCaseModel):
-    name: str = Field(..., description="The name of the context")
-    description: str | None = Field(None, description="The description of the context")
-    type: ContextType = Field(..., description="The type of the context")
-
-class ContextMetadataSignedUploadUrl(CamelCaseModel):
-    signed_upload_url: str | None = Field(None, description="A signed URL for uploading a file")
-
-class ContextMetadataPostRequest(ContextMetadataBase):
+class ContextMetadataPostRequest(ContextBase):
+    """Request model for posting context metadata"""
     pass
 
-class ContextMetadataPostResponse(ContextId, ContextBase, ContextMetadataSignedUploadUrl, CamelCaseModel):
-    pass
-
-## POST FILE
-class ContextFileUploadPostRequest(ContextId, CamelCaseModel):
-    name: str = Field(..., description="The name of the context")
-
-class ContextFileUploadPostResponse(ContextMetadataSignedUploadUrl, CamelCaseModel):
-    pass
-
-
+class ContextMetadataPostResponse(Context):
+    """Response model for posting context metadata"""
+    signed_upload_url: str = Field(..., description="Signed URL for uploading context file")

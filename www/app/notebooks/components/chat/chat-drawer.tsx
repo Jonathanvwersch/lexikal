@@ -11,10 +11,10 @@ export function NotebookChatDrawer({ isOpen, onClose }: Props) {
   return (
     <div
       className={`
-        absolute px-3 pt-8 mx-3 my-2 
+        absolute px-3 pt-8 mx-3
         bg-muted/25 rounded-tr-[8px] rounded-tl-[8px] 
         border-gray-200 border-solid border-[1px] 
-        top-0 bottom-0 h-full
+        top-3 bottom-0
         transition-all duration-500 ease-in-out
         left-0 right-0
       `}

@@ -2,7 +2,7 @@
 
 import { NotebookCard } from "@/app/notebooks/components/notebook-card";
 import { useCacheQuery } from "@/hooks/use-cache-query";
-import { queryKeys } from "@/api/keys";
+import { queryKeys } from "@/react-query/keys";
 import { NotebooksGetResponse } from "@/generated";
 
 export function Notebooks() {

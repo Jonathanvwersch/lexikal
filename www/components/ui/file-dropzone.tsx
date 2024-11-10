@@ -17,6 +17,7 @@ interface Props {
   maxFileSize?: number; // in bytes
   maxFiles?: number;
   multiple?: boolean;
+  required?: boolean;
 }
 
 export default function FileDropzone({
@@ -26,6 +27,7 @@ export default function FileDropzone({
   maxFileSize = 5 * 1024 * 1024, // 5MB
   maxFiles = 5,
   multiple = true,
+  required = false,
 }: Props) {
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -105,20 +107,18 @@ export default function FileDropzone({
 
   return (
     <Card
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      onClick={() => document.getElementById("fileInput")?.click()}
+      tabIndex={0}
+      role="button"
       className={`mx-auto flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg transition-colors ${
         dragActive ? "border-primary" : "border-input"
       } hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
     >
       <CardContent className="p-4">
-        <div
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
-          onClick={() => document.getElementById("fileInput")?.click()}
-          tabIndex={0}
-          role="button"
-          className="flex items-center flex-col justify-center"
-        >
+        <div className="flex items-center flex-col justify-center">
           <UploadCloud className="w-6 h-6 mb-4 text-muted-foreground" />
           <Label
             htmlFor="fileInput"
@@ -134,8 +134,9 @@ export default function FileDropzone({
           <Input
             id="fileInput"
             type="file"
-            multiple={multiple}
+            required={required}
             className="hidden"
+            multiple={multiple}
             onChange={onInputChange}
             accept={acceptedFileTypes.join(",")}
           />

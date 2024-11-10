@@ -1,13 +1,10 @@
 export const queryKeys = {
   notebooks: {
-    get: ["get-notebooks"],
-    post: ["post-notebook"],
+    get: ["notebooks"],
   },
   contexts: {
-    get: (notebookId: string) => ["get-contexts", notebookId] as const,
-    postMetadata: ["post-context-metadata"],
-    uploadFile: (notebookId: string, contextId: string) =>
-      ["upload-context-file", notebookId, contextId] as const,
+    get: (notebookId: string) =>
+      [...queryKeys.notebooks.get, notebookId, "contexts"] as const,
   },
 } as const;
 
