@@ -1,10 +1,14 @@
 "use client";
 
 import { NotebookCard } from "@/app/notebooks/components/notebook-card";
-import { useGetNotebooks } from "@/api/notebooks";
+import { useCacheQuery } from "@/hooks/use-cache-query";
+import { queryKeys } from "@/api/keys";
+import { NotebooksGetResponse } from "@/generated";
 
 export function Notebooks() {
-  const { data } = useGetNotebooks();
+  const data = useCacheQuery<NotebooksGetResponse | undefined>({
+    queryKey: queryKeys.notebooks.get,
+  });
   const notebooks = data?.notebooks;
 
   return (
