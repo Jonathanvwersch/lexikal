@@ -23,6 +23,7 @@ langchain-openai = "^0.2.8"
 pypdf = "^5.1.0"
 python-magic = "^0.4.27"
 langchain-community = "^0.3.7"
+openai = "^1.0.0"
 
 
 [build-system]

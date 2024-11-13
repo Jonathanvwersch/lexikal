@@ -2,6 +2,7 @@ from supabase import Client
 from typing import List, Dict
 import logging
 import re
+from pydantic_settings import BaseSettings
 
 def clean_text(text: str) -> str:
     """Clean text by removing null bytes and invalid characters"""
@@ -41,4 +42,15 @@ async def store_chunks(db: Client, context_id: str, chunks: List[Dict]):
     except Exception as e:
         logging.error(f"Error storing chunks: {str(e)}")
         raise
+
+class Settings(BaseSettings):
+    CHUNK_SIZE: int = 500
+    CHUNK_OVERLAP: int = 50
+    EMBEDDING_BATCH_SIZE: int = 20
+    
+    class Config:
+        env_file = ".env"
+        extra = 'allow'  # Allow extra fields from environment variables
+
+settings = Settings()
 

@@ -1,12 +1,12 @@
 import {
-  chunkContextNotebooksNotebookIdContextsContextIdChunkPost,
   listContextsNotebooksNotebookIdContextsGet,
+  processDocumentChunksNotebooksNotebookIdContextsContextIdChunkPost,
   uploadMetadataNotebooksNotebookIdContextsMetadataPost,
 } from "@/generated/services.gen";
 import {
-  ChunkContextNotebooksNotebookIdContextsContextIdChunkPostData,
   ListContextsNotebooksNotebookIdContextsGetData,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
+  ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData,
 } from "@/generated/types.gen";
 
 import { clientAuthFetch } from "./auth";
@@ -32,10 +32,10 @@ export const getContexts = async (
 };
 
 export const postChunkContext = async (
-  data: ChunkContextNotebooksNotebookIdContextsContextIdChunkPostData
+  data: ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData
 ) => {
   const res = await clientAuthFetch(
-    chunkContextNotebooksNotebookIdContextsContextIdChunkPost,
+    processDocumentChunksNotebooksNotebookIdContextsContextIdChunkPost,
     data
   );
   return res.data;

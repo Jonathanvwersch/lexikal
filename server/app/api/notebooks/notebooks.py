@@ -5,6 +5,7 @@ from ...crud import get_notebooks, post_notebook
 from ...schemas.notebooks import NotebookPostRequest, NotebookPostResponse, NotebooksGetResponse
 from supabase import Client
 from .contexts import router as contexts_router
+from .chat import router as chat_router
 
 router = APIRouter(
     prefix="/notebooks",
@@ -28,3 +29,4 @@ async def create_notebook(
     return await post_notebook(db, user.id, notebook)
 
 router.include_router(contexts_router, prefix="/{notebook_id}/contexts", tags=["contexts"])
+router.include_router(chat_router, prefix="/{notebook_id}/chat", tags=["chat"])

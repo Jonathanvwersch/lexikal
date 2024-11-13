@@ -86,7 +86,7 @@ async def process_document_chunks(
         
         await store_chunks(db, context_id, chunks)
         
-        return {"status": "success", "chunks_processed": len(chunks)}
+        return {"status": "success"}
         
     except Exception as e:
         logging.error(f"Failed to process document: {str(e)}")

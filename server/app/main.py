@@ -4,6 +4,13 @@ from contextlib import asynccontextmanager
 from .db import supabase
 import uvicorn
 from .api.notebooks.notebooks import router as notebooks_router
+import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @asynccontextmanager
 async def lifespan():
