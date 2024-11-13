@@ -201,6 +201,17 @@ export type UploadMetadataNotebooksNotebookIdContextsMetadataPostResponse = (Con
 
 export type UploadMetadataNotebooksNotebookIdContextsMetadataPostError = (HttpValidationError);
 
+export type ChunkContextNotebooksNotebookIdContextsContextIdChunkPostData = {
+    path: {
+        context_id: string;
+        notebook_id: string;
+    };
+};
+
+export type ChunkContextNotebooksNotebookIdContextsContextIdChunkPostResponse = (unknown);
+
+export type ChunkContextNotebooksNotebookIdContextsContextIdChunkPostError = (HttpValidationError);
+
 export type RootGetResponse = (unknown);
 
 export type RootGetError = unknown;

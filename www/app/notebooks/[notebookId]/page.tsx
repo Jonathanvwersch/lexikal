@@ -6,5 +6,5 @@ type Props = Readonly<{
 }>;
 
 export default function NotebookPage({ params }: Props) {
-  return <NotebookLayout params={params}>Notebook</NotebookLayout>;
+  return <NotebookLayout params={params}></NotebookLayout>;
 }

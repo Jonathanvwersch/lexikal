@@ -21,3 +21,9 @@ async def post_context_metadata(db: Client, context: ContextInsert) -> Context:
     if response.data:
         return Context(**response.data[0])
     return None
+
+async def get_context(db: Client, context_id: str) -> Context:
+    response = db.table('contexts').select("*").eq('id', context_id).single().execute()
+    if response.data:
+        return Context(**response.data)
+    return None

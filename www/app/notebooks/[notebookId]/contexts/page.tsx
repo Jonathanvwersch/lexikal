@@ -1,4 +1,5 @@
 import NotebookLayout from "../components/notebook-layout";
+import ContextGrid from "./components/context-grid";
 import { Contexts } from "./components/contexts";
 
 type Props = Readonly<{
@@ -10,7 +11,9 @@ export default async function ContextsPage({ params }: Props) {
 
   return (
     <NotebookLayout params={params}>
-      <Contexts notebookId={notebookId} />
+      <ContextGrid>
+        <Contexts notebookId={notebookId} />
+      </ContextGrid>
     </NotebookLayout>
   );
 }

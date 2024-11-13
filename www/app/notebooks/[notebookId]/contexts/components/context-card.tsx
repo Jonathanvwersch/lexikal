@@ -10,8 +10,10 @@ export function ContextCard({
   id,
   description,
   originalFileName,
+  type,
 }: Props) {
   const pathname = usePathname();
+  const Icon = CONTEXT_TYPE_MAP[type];
   return (
     <Link
       href={`${pathname}/${id}`}
@@ -28,12 +30,13 @@ export function ContextCard({
           <p className="text-xs text-muted-foreground line-clamp-3	">
             {description}
           </p>
-        </div>  
+        </div>
       </div>
-
-      <div className="flex items-center justify-between">
-        <CONTEXT_TYPE_MAP[type] className="w-[16px] h-[16px] min-h-[16px] min-w-[16px]" />
-        <p className="text-[10px] text-muted-foreground">{originalFileName}</p>
+      <div className="flex items-center gap-2">
+        <Icon className="w-[16px] h-[16px] min-h-[16px] min-w-[16px]" />
+        <p className="text-[10px] text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis">
+          {originalFileName}
+        </p>
       </div>
     </Link>
   );

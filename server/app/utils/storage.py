@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 from supabase import Client
-from storage3.types import SignedUploadURL
 
 async def save_file_to_supabase(db: Client, file_content: bytes, storage_path: str, content_type: str) -> str:
     """
@@ -30,3 +29,10 @@ async def generate_signed_upload_url(db: Client, storage_path: str) -> str:
     signed_url = db.storage.from_('contexts').create_signed_upload_url(storage_path)['signed_url']
     
     return signed_url
+
+
+def build_context_storage_path(notebook_id: str, context_id: str, original_file_name: str) -> str:
+    """
+    Builds a storage path for a context file stored in Supabase's storage
+    """
+    return f"{notebook_id}/{context_id}/{original_file_name}"

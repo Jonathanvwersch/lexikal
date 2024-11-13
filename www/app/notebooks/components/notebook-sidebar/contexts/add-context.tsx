@@ -23,6 +23,9 @@ import { useParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/react-query/keys";
 import { ContextsGetResponse } from "@/generated/types.gen";
+import { updateContextCache } from "@/react-query/updaters/contexts";
+import { postChunkContext } from "@/api/client/contexts";
+import { uploadFileToSupabase } from "@/api/client/storage";
 
 export function AddContext() {
   const [files, setFiles] = useState<File[]>([]);
@@ -54,28 +57,15 @@ export function AddContext() {
         setUploadingFile(true);
 
         try {
-          await fetch(signedUploadUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": file.type,
-            },
-            body: file,
-          });
+          await uploadFileToSupabase(file, signedUploadUrl);
         } catch (error) {
           console.error("Upload error:", error);
         } finally {
+          await postChunkContext({
+            path: { notebook_id: notebookId, context_id: context.id },
+          });
+          updateContextCache(queryClient, notebookId, context);
           setUploadingFile(false);
-          queryClient.setQueryData<ContextsGetResponse>(
-            queryKeys.contexts.get(notebookId),
-            (oldData) => {
-              const newContext = omit(context, "signedUpload");
-              return {
-                contexts: oldData
-                  ? [...oldData.contexts, newContext]
-                  : [newContext],
-              };
-            }
-          );
           handleClose();
         }
       },
