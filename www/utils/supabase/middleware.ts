@@ -7,6 +7,7 @@ const restrictedRoutes = [
   "/login",
   "/sign-up",
   "/signup",
+  "/register",
 ];
 
 export async function updateSession(request: NextRequest) {

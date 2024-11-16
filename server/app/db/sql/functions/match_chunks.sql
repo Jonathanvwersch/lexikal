@@ -7,9 +7,9 @@ create or replace function match_chunks(
     match_count int default 5
 )
 returns table (
-    id bigint,
+    id uuid,
     content text,
-    context_id text,
+    context_id uuid,
     metadata jsonb,
     similarity float
 )
@@ -20,14 +20,16 @@ begin
     select 
         chunks.id,
         chunks.content,
-        chunks.context_id::text,
+        chunks.context_id,
         chunks.metadata,
         (chunks.embedding <=> query_embedding) as similarity
     from chunks
     where 
-        chunks.context_id = any(context_ids)
+        chunks.context_id = any(context_ids::uuid[]) -- Casting text[] to uuid[]
         and (chunks.embedding <=> query_embedding) < 1 - match_threshold
     order by chunks.embedding <=> query_embedding
     limit least(match_count, 200);
 end;
-$$; 
+$$;
+
+

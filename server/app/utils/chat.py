@@ -1,8 +1,15 @@
 from typing import List, Tuple
+
+from sqlalchemy import UUID
 from ..schemas.chat import ChatMessage
 import openai
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from supabase import Client
+from openai import AsyncOpenAI
+import os
+
+# Initialize the async client
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) -> List[dict]:
     """
@@ -10,9 +17,10 @@ async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) ->
     """
     embeddings = OpenAIEmbeddings()
     query_embedding = embeddings.embed_query(query)
+
     
     # Perform vector similarity search against chunks
-    response = await db.rpc(
+    response = db.rpc(
         'match_chunks',
         {
             'query_embedding': query_embedding,
@@ -44,18 +52,17 @@ async def generate_response(
     # Add chat history if provided
     if history:
         messages.extend([{"role": msg.role, "content": msg.content} for msg in history])
-    
+    print(context)
     # Add system message with context
     messages.append({
         "role": "system",
-        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}"
+        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}. If you are unable to find the answer in the context, say so."
     })
-    
     # Add user's query
     messages.append({"role": "user", "content": query})
     
-    # Get response from ChatGPT
-    response = await openai.ChatCompletion.create(
+    # Get response from ChatGPT using the async client
+    response = await client.chat.completions.create(
         model="gpt-4",
         messages=messages,
         temperature=0.7

@@ -9,34 +9,41 @@ import {
   ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData,
 } from "@/generated/types.gen";
 
-import { clientAuthFetch } from "./auth";
+import { authWrapper } from "./auth";
+import { ApiParams } from "./types";
 
-export const postContextMetadata = async (
-  data: UploadMetadataNotebooksNotebookIdContextsMetadataPostData
-) => {
-  const res = await clientAuthFetch(
+export const postContextMetadata = async ({
+  data,
+  isServer,
+}: ApiParams<UploadMetadataNotebooksNotebookIdContextsMetadataPostData>) => {
+  const res = await authWrapper(
     uploadMetadataNotebooksNotebookIdContextsMetadataPost,
-    data
+    data,
+    isServer
   );
   return res.data;
 };
 
-export const getContexts = async (
-  data: ListContextsNotebooksNotebookIdContextsGetData
-) => {
-  const res = await clientAuthFetch(
+export const getContexts = async ({
+  data,
+  isServer,
+}: ApiParams<ListContextsNotebooksNotebookIdContextsGetData>) => {
+  const res = await authWrapper(
     listContextsNotebooksNotebookIdContextsGet,
-    data
+    data,
+    isServer
   );
   return res.data;
 };
 
-export const postChunkContext = async (
-  data: ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData
-) => {
-  const res = await clientAuthFetch(
+export const postChunkContext = async ({
+  data,
+  isServer,
+}: ApiParams<ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData>) => {
+  const res = await authWrapper(
     processDocumentChunksNotebooksNotebookIdContextsContextIdChunkPost,
-    data
+    data,
+    isServer
   );
   return res.data;
 };

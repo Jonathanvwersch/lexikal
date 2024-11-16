@@ -1,6 +1,6 @@
 import { QueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
-import { getContexts, postContextMetadata } from "../api/client/contexts";
+import { getContexts, postContextMetadata } from "../api/contexts";
 import {
   ContextMetadataPostResponse,
   ContextsGetResponse,
@@ -9,6 +9,7 @@ import {
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
 } from "@/generated/types.gen";
 import { MutationOptions } from "./types";
+import { ApiParams } from "@/api/types";
 
 export const usePostContextMetadata = (
   options?: MutationOptions<
@@ -19,7 +20,7 @@ export const usePostContextMetadata = (
   return useMutation<
     ContextMetadataPostResponse | undefined,
     UploadMetadataNotebooksNotebookIdContextsMetadataPostError,
-    UploadMetadataNotebooksNotebookIdContextsMetadataPostData
+    ApiParams<UploadMetadataNotebooksNotebookIdContextsMetadataPostData>
   >({
     ...options,
     mutationFn: postContextMetadata,
@@ -39,6 +40,9 @@ export const useGetContexts = (
   >({
     ...options,
     queryKey: queryKeys.contexts.get(params.notebookId),
-    queryFn: () => getContexts({ path: { notebook_id: params.notebookId } }),
+    queryFn: () =>
+      getContexts({
+        data: { path: { notebook_id: params.notebookId } },
+      }),
   });
 };

@@ -1,7 +1,7 @@
 import NotebookSidebarLayout from "@/app/notebooks/components/notebook-sidebar/sidebar-layout";
 import { SidebarInset } from "@/components/ui/sidebar";
 import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hydrate";
-import { getContexts } from "@/api/server/contexts";
+import { getContexts } from "@/api/contexts";
 import { queryKeys } from "@/react-query/keys";
 import { NotebookParams } from "./types";
 
@@ -19,7 +19,13 @@ export default async function NotebookLayout({
   return (
     <ServerSideFetchAndHydrate
       queryKeys={queryKeys.contexts.get(notebookId)}
-      queryFns={[() => getContexts({ path: { notebook_id: notebookId } })]}
+      queryFns={[
+        () =>
+          getContexts({
+            data: { path: { notebook_id: notebookId } },
+            isServer: true,
+          }),
+      ]}
     >
       <NotebookSidebarLayout>
         <SidebarInset>{children}</SidebarInset>

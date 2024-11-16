@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { chatWithNotebook } from "../api/client/chat";
+import { chatWithNotebook } from "../api/chat";
 import {
   ChatWithNotebookNotebooksNotebookIdChatPostData,
   ChatWithNotebookNotebooksNotebookIdChatPostError,
   ChatResponse,
 } from "@/generated/types.gen";
 import { MutationOptions } from "./types";
+import { ApiParams } from "@/api/types";
 
 export const useChatWithNotebook = (
   options?: MutationOptions<
@@ -16,9 +17,9 @@ export const useChatWithNotebook = (
   return useMutation<
     ChatResponse | undefined,
     ChatWithNotebookNotebooksNotebookIdChatPostError,
-    ChatWithNotebookNotebooksNotebookIdChatPostData
+    ApiParams<ChatWithNotebookNotebooksNotebookIdChatPostData>
   >({
-    ...options,
     mutationFn: chatWithNotebook,
+    ...options,
   });
 };

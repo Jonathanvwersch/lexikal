@@ -6,43 +6,17 @@ import {
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { RefObject, useRef, useState } from "react";
-import Logo from "@/public/icons/logo.png";
 import { ChatMessage } from "@/generated/types.gen";
+import Logo from "@/public/icons/logo.png";
 
-interface Message extends ChatMessage {
-  sources?: Array<{
-    context_id: string;
-    content: string;
-  }>;
-}
+type Props = Readonly<{
+  messages: ChatMessage[];
+  isReceivingMessage: boolean;
+}>;
 
-export function ChatMessages({
-  innerRef,
-}: {
-  innerRef: RefObject<HTMLDivElement>;
-}) {
-  const messagesRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  // Expose these methods to parent components
-  const addMessage = (message: Message) => {
-    setMessages((prev) => [...prev, message]);
-    // Scroll to bottom after message is added
-    setTimeout(() => {
-      if (messagesRef.current) {
-        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-      }
-    }, 100);
-  };
-
-  const setGenerating = (generating: boolean) => {
-    setIsGenerating(generating);
-  };
-
+export function ChatMessages({ messages, isReceivingMessage }: Props) {
   return (
-    <ChatMessageList className="rounded-[8px]" ref={innerRef}>
+    <ChatMessageList className="rounded-[8px]">
       {/* Initial message */}
       <ChatBubble variant="received">
         <ChatBubbleAvatar
@@ -62,30 +36,25 @@ export function ChatMessages({
             key={index}
             variant={message.role === "user" ? "sent" : "received"}
           >
-            <ChatBubbleAvatar
-              src=""
-              fallback={message.role === "user" ? "👨🏽" : "🤖"}
-            />
+            {message.role === "user" ? (
+              <ChatBubbleAvatar src="" fallback="👨🏽" />
+            ) : (
+              <ChatBubbleAvatar
+                src={Logo.src}
+                fallback="🤖"
+                className="rounded-full"
+              />
+            )}
             <ChatBubbleMessage
               variant={message.role === "user" ? "sent" : "received"}
             >
               {message.content}
-              {message.sources && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  <p className="font-semibold">Sources:</p>
-                  {message.sources.map((source, idx) => (
-                    <p key={idx} className="mt-1">
-                      {source.content}
-                    </p>
-                  ))}
-                </div>
-              )}
             </ChatBubbleMessage>
           </ChatBubble>
         ))}
 
       {/* Loading */}
-      {isGenerating && (
+      {isReceivingMessage && (
         <ChatBubble variant="received">
           <ChatBubbleAvatar src="" fallback="🤖" />
           <ChatBubbleMessage isLoading />

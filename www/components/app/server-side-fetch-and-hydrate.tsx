@@ -1,15 +1,15 @@
+import { ApiFunction } from "@/api/types";
 import { QueryKey } from "@/react-query/keys";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
-  QueryFunction,
 } from "@tanstack/react-query";
 
 type Props = {
   children: React.ReactNode;
   queryKeys: QueryKey;
-  queryFns: QueryFunction[];
+  queryFns: ApiFunction[];
 };
 
 export default async function ServerSideFetchAndHydrate({
@@ -33,7 +33,7 @@ export default async function ServerSideFetchAndHydrate({
       queryFns.map((queryFn) =>
         queryClient.prefetchQuery({
           queryKey: Array.isArray(queryKeys) ? queryKeys : [queryKeys],
-          queryFn,
+          queryFn: (data) => queryFn({ data, isServer: true }),
           staleTime: Infinity,
         })
       )

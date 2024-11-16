@@ -2,7 +2,7 @@ from supabase import Client
 from ..models import Context
 from ..schemas.contexts import ContextsGetResponse, ContextGetResponse, ContextMetadataPostResponse
 from typing import TypedDict
-from ..utils.embeddings import get_embedding
+import logging
 
 class ContextInsert(TypedDict):
     name: str
@@ -30,12 +30,10 @@ async def get_context(db: Client, context_id: str) -> Context:
     return None
 
 async def create_context(db: Client, context_data: dict):
-    # Generate embedding for the context content
-    embedding = await get_embedding(context_data["content"])
-    
-    # Add the embedding to the context data
-    context_data["embedding"] = embedding
-    
-    # Store in Supabase with the embedding
-    response = db.table("contexts").insert(context_data).execute()
-    return response.data[0] if response.data else None
+    """Store context data in the database"""
+    try:
+        response = db.table("contexts").insert(context_data).execute()
+        return response.data[0] if response.data else None
+    except Exception as e:
+        logging.error(f"Error creating context: {str(e)}")
+        raise

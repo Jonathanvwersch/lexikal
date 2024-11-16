@@ -16,7 +16,6 @@ export function NotebookChatInput({
       <div className="flex items-center gap-2">
         <ChatInput
           placeholder="Type your message here..."
-          className="min-h-10 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />

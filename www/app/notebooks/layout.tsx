@@ -1,4 +1,4 @@
-import { getNotebooks } from "@/api/server/notebooks";
+import { getNotebooks } from "@/api/notebooks";
 import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hydrate";
 import { queryKeys } from "@/react-query/keys";
 export default function NotebooksLayout({
@@ -9,7 +9,7 @@ export default function NotebooksLayout({
   return (
     <ServerSideFetchAndHydrate
       queryKeys={queryKeys.notebooks.get}
-      queryFns={[getNotebooks]}
+      queryFns={[(data) => getNotebooks({ data, isServer: true })]}
     >
       {children}
     </ServerSideFetchAndHydrate>

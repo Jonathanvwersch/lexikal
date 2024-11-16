@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getNotebooks, postNotebook } from "../api/client/notebooks";
+import { getNotebooks, postNotebook } from "../api/notebooks";
 import { queryKeys } from "./keys";
 import {
   CreateNotebookNotebooksPostData,
@@ -9,6 +9,7 @@ import {
   NotebooksGetResponse,
 } from "@/generated/types.gen";
 import { MutationOptions, QueryOptions } from "./types";
+import { ApiParams } from "@/api/types";
 
 export const usePostNotebook = (
   options?: MutationOptions<
@@ -19,7 +20,7 @@ export const usePostNotebook = (
   return useMutation<
     NotebookPostResponse | undefined,
     CreateNotebookNotebooksPostError,
-    CreateNotebookNotebooksPostData
+    ApiParams<CreateNotebookNotebooksPostData>
   >({
     ...options,
     mutationFn: postNotebook,
@@ -34,7 +35,7 @@ export const useGetNotebooks = (
     ListNotebooksNotebooksGetError
   >({
     ...options,
-    queryKey: [queryKeys.notebooks.get],
-    queryFn: getNotebooks,
+    queryKey: queryKeys.notebooks.get,
+    queryFn: () => getNotebooks(),
   });
 };

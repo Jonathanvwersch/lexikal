@@ -41,9 +41,11 @@ export function NewNotebookPage() {
 
   function handleSubmit(data: z.infer<typeof formSchema>) {
     createNotebook({
-      body: {
-        name: data.name,
-        description: data.description,
+      data: {
+        body: {
+          name: data.name,
+          description: data.description,
+        },
       },
     });
   }

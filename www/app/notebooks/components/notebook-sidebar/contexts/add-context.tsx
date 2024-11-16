@@ -24,8 +24,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/react-query/keys";
 import { ContextsGetResponse } from "@/generated/types.gen";
 import { updateContextCache } from "@/react-query/updaters/contexts";
-import { postChunkContext } from "@/api/client/contexts";
-import { uploadFileToSupabase } from "@/api/client/storage";
+import { postChunkContext } from "@/api/contexts";
+import { uploadFileToSupabase } from "@/api/storage";
 
 export function AddContext() {
   const [files, setFiles] = useState<File[]>([]);
@@ -62,7 +62,9 @@ export function AddContext() {
           console.error("Upload error:", error);
         } finally {
           await postChunkContext({
-            path: { notebook_id: notebookId, context_id: context.id },
+            data: {
+              path: { notebook_id: notebookId, context_id: context.id },
+            },
           });
           updateContextCache(queryClient, notebookId, context);
           setUploadingFile(false);
@@ -78,12 +80,14 @@ export function AddContext() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     postContextMetadata({
-      path: { notebook_id: notebookId },
-      body: {
-        name,
-        description,
-        type: "pdf",
-        originalFileName: files[0].name,
+      data: {
+        path: { notebook_id: notebookId },
+        body: {
+          name,
+          description,
+          type: "pdf",
+          originalFileName: files[0].name,
+        },
       },
     });
   };
