@@ -1,44 +1,42 @@
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ChatMessages } from "./chat-messages";
 import { ChatMessage } from "@/generated/types.gen";
+import { cn } from "@/utils/styles";
 
 type Props = Readonly<{
   isOpen: boolean;
-  onClose: () => void;
   messages: ChatMessage[];
   isReceivingMessage: boolean;
+  bottomRef: React.RefObject<HTMLDivElement>;
 }>;
 
 export const NotebookChatDrawer = ({
   isOpen,
-  onClose,
   messages,
   isReceivingMessage,
+  bottomRef,
 }: Props) => {
   return (
     <div
-      className={`
-          absolute px-3 pt-8 mx-3
-          bg-muted/25 rounded-tr-[8px] rounded-tl-[8px] 
-          border-gray-200 border-solid border-[1px] 
-          top-3 bottom-0
-          transition-all duration-500 ease-in-out
-          left-0 right-0
-        `}
-      style={{
-        transform: isOpen ? "translateY(0%)" : "translateY(100%)",
-      }}
+      className={cn(
+        `
+        z-0 
+        overflow-auto
+        absolute mx-3
+        top-3 bottom-0
+        left-0 right-0
+        pb-16
+        
+        bg-muted/25 
+        rounded-tr-[8px] rounded-tl-[8px]
+        border-gray-200 border-solid border-[1px]
+        
+        transition-opacity duration-500 ease-in-out
+      `,
+        isOpen ? "opacity-100" : "opacity-0"
+      )}
     >
-      <Button
-        size="icon"
-        className="absolute top-1 right-1"
-        variant="ghost"
-        onClick={onClose}
-      >
-        <X />
-      </Button>
       <ChatMessages
+        bottomRef={bottomRef}
         messages={messages}
         isReceivingMessage={isReceivingMessage}
       />

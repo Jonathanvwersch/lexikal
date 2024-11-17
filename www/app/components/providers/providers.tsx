@@ -4,6 +4,7 @@ import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryProvider from "./react-query-provider";
 import { BreadcrumbsProvider } from "@/context/breadcrumbs/breadcrumbs-provider";
+import UserProvider from "./user-provider";
 
 type Props = Readonly<{
   children: React.ReactNode;

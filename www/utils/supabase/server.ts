@@ -1,8 +1,14 @@
-import "server-only";
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 
 export const createClient = async () => {
+  if (typeof window !== "undefined") {
+    throw new Error(
+      "Attempted to use server-only Supabase client on the client"
+    );
+  }
+
+  const cookies = await import("next/headers").then((mod) => mod.cookies);
+
   const cookieStore = await cookies();
 
   return createServerClient(

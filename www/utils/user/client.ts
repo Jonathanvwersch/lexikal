@@ -10,7 +10,7 @@ export async function getAuthUser(): Promise<GoogleAuthUser | null> {
   return user?.user_metadata as GoogleAuthUser | null;
 }
 
-export async function getSession() {
+export async function getClientSession() {
   const supabase = createClient();
   const {
     data: { session },

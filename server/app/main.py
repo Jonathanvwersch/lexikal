@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from .db import supabase
 import uvicorn
 from .api.notebooks.notebooks import router as notebooks_router
+from .api.users import router as users_router
 import openai
 import os
 from dotenv import load_dotenv
@@ -29,6 +30,7 @@ app.add_middleware(
 )
 
 app.include_router(notebooks_router)
+app.include_router(users_router)
 app.router.redirect_slashes = False 
 
 

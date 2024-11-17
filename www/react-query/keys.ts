@@ -6,11 +6,14 @@ export const queryKeys = {
     get: (notebookId: string) =>
       [...queryKeys.notebooks.get, notebookId, "contexts"] as const,
   },
+  users: {
+    getMe: ["users", "me"],
+  },
 } as const;
 
 type NestedKeys<T> = T extends Record<string, unknown>
   ? {
-      [K in keyof T]: T[K] extends readonly [string]
+      [K in keyof T]: T[K] extends readonly string[]
         ? T[K]
         : T[K] extends (...args: any[]) => readonly any[]
         ? ReturnType<T[K]>

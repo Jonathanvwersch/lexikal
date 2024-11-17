@@ -20,10 +20,12 @@ export default async function ServerSideFetchAndHydrate({
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        // Disable retries on the server since we want to fail fast
         retry: false,
-        // Disable refetching on window focus since this is server-side
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        staleTime: Infinity,
+        gcTime: Infinity,
       },
     },
   });
@@ -35,6 +37,7 @@ export default async function ServerSideFetchAndHydrate({
           queryKey: Array.isArray(queryKeys) ? queryKeys : [queryKeys],
           queryFn: (data) => queryFn({ data, isServer: true }),
           staleTime: Infinity,
+          gcTime: Infinity,
         })
       )
     );

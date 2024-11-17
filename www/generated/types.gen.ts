@@ -180,6 +180,13 @@ export type NotebooksGetResponse = {
     notebooks: Array<NotebookGetResponse>;
 };
 
+export type User = {
+    id: string;
+    email: string;
+    name: string;
+    profileImageUrl: string;
+};
+
 export type ValidationError = {
     loc: Array<(string | number)>;
     msg: string;
@@ -240,6 +247,10 @@ export type ChatWithNotebookNotebooksNotebookIdChatPostData = {
 export type ChatWithNotebookNotebooksNotebookIdChatPostResponse = (ChatResponse);
 
 export type ChatWithNotebookNotebooksNotebookIdChatPostError = (HttpValidationError);
+
+export type GetUserUsersMeGetResponse = (User);
+
+export type GetUserUsersMeGetError = unknown;
 
 export type RootGetResponse = (unknown);
 

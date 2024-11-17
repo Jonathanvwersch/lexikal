@@ -1,8 +1,7 @@
 from typing import List, Tuple
 
-from sqlalchemy import UUID
+from ..models.chunks import Chunk
 from ..schemas.chat import ChatMessage
-import openai
 from langchain_openai import OpenAIEmbeddings
 from supabase import Client
 from openai import AsyncOpenAI
@@ -11,14 +10,13 @@ import os
 # Initialize the async client
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) -> List[dict]:
+async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) -> List[Chunk]:
     """
     Retrieve relevant chunks from the database using semantic search
     """
     embeddings = OpenAIEmbeddings()
     query_embedding = embeddings.embed_query(query)
 
-    
     # Perform vector similarity search against chunks
     response = db.rpc(
         'match_chunks',
@@ -37,7 +35,7 @@ async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) ->
 
 async def generate_response(
     query: str,
-    chunks: List[dict],
+    chunks: List[Chunk],
     history: List[ChatMessage] = None
 ) -> Tuple[str, List[dict]]:
     """
@@ -52,11 +50,11 @@ async def generate_response(
     # Add chat history if provided
     if history:
         messages.extend([{"role": msg.role, "content": msg.content} for msg in history])
-    print(context)
+
     # Add system message with context
     messages.append({
         "role": "system",
-        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}. If you are unable to find the answer in the context, say so."
+        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}. If you are unable to find the answer in the context, say so. If "
     })
     # Add user's query
     messages.append({"role": "user", "content": query})
@@ -73,5 +71,6 @@ async def generate_response(
         "context_id": chunk["context_id"],
         "content": chunk["content"][:200]  # Preview of the chunk
     } for chunk in chunks]
+
     
     return response.choices[0].message.content, sources 

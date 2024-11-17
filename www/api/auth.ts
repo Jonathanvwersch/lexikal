@@ -1,6 +1,7 @@
+import { getClientSession } from "@/utils/user/client";
+import { getServerSession } from "@/utils/user/server";
 import { createClient, createConfig, Options } from "@hey-api/client-fetch";
 import { Session } from "@supabase/supabase-js";
-import { lazy } from "react";
 
 const HEY_API_CLIENT_CONFIG = {
   baseUrl: "http://127.0.0.1:8000/api/v1",
@@ -24,21 +25,11 @@ async function authFetch<T, D extends Options<T> | Record<string, never>>(
   });
 }
 
-async function getClientUtil() {
-  const { getSession } = await import("@/utils/user/client");
-  return getSession();
-}
-
-async function getServerUtil() {
-  const { getSession } = await import("@/utils/user/server");
-  return getSession();
-}
-
 async function getSessionUtil(isServer = false) {
   if (isServer) {
-    return getServerUtil();
+    return getServerSession();
   }
-  return getClientUtil();
+  return getClientSession();
 }
 
 export async function authWrapper<

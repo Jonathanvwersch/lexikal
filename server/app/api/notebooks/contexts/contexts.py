@@ -69,9 +69,8 @@ async def process_document_chunks(
         context = await get_context(db, context_id)
         if not context:
             raise HTTPException(status_code=404, detail="Context not found")
-        print("context", context)
+
         storage_path = build_context_storage_path(notebook_id, context_id, context.original_file_name)
-        print("storage_path", storage_path)
         
         # Download file from Supabase storage
         file_data = db.storage.from_('contexts').download(storage_path)
