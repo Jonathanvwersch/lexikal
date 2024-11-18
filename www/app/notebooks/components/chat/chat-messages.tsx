@@ -6,10 +6,11 @@ import {
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { ChatMessage } from "@/generated/types.gen";
+import { ChatMessage, GetUserUsersMeGetResponse } from "@/generated/types.gen";
+import { useCacheQuery } from "@/hooks/use-cache-query";
 import Logo from "@/public/icons/logo.png";
-import { useGetMe } from "@/react-query/users";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { queryKeys } from "@/react-query/keys";
+import { useLayoutEffect, useRef } from "react";
 
 type Props = Readonly<{
   messages: ChatMessage[];
@@ -22,7 +23,9 @@ export function ChatMessages({
   isReceivingMessage,
   bottomRef,
 }: Props) {
-  const { data: me } = useGetMe();
+  // const me = useCacheQuery<GetUserUsersMeGetResponse>({
+  //   queryKey: queryKeys.users.getMe,
+  // });
   const loadingRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -54,8 +57,8 @@ export function ChatMessages({
           >
             {message.role === "user" ? (
               <ChatBubbleAvatar
-                src={me?.profileImageUrl}
-                fallback={me?.name?.[0]}
+                // src={me?.profileImageUrl}
+                // fallback={me?.name?.[0]}
                 className="rounded-full"
               />
             ) : (

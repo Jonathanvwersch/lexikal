@@ -1,5 +1,3 @@
-"use client";
-
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryProvider from "./react-query-provider";
@@ -13,15 +11,17 @@ type Props = Readonly<{
 export default function Providers({ children }: Props) {
   return (
     <ReactQueryProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <Toaster />
-        <BreadcrumbsProvider>{children}</BreadcrumbsProvider>
-      </ThemeProvider>
+      <UserProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Toaster />
+          <BreadcrumbsProvider>{children}</BreadcrumbsProvider>
+        </ThemeProvider>
+      </UserProvider>
     </ReactQueryProvider>
   );
 }

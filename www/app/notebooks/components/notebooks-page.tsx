@@ -2,7 +2,7 @@ import NotebookGrid from "./notebook-grid";
 import { Notebooks } from "./notebooks";
 import { CreateNotebook } from "./create-notebook";
 
-export async function NotebooksPage() {
+export function NotebooksPage() {
   return (
     <NotebookGrid>
       <CreateNotebook />

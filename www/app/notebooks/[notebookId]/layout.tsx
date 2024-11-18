@@ -4,6 +4,7 @@ import ServerSideFetchAndHydrate from "@/components/app/server-side-fetch-and-hy
 import { getContexts } from "@/api/contexts";
 import { queryKeys } from "@/react-query/keys";
 import { NotebookParams } from "./types";
+import { ContextsProvider } from "./context/contexts-provider";
 
 interface NotebookLayoutProps {
   children: React.ReactNode;
@@ -27,9 +28,11 @@ export default async function NotebookLayout({
           }),
       ]}
     >
-      <NotebookSidebarLayout>
-        <SidebarInset>{children}</SidebarInset>
-      </NotebookSidebarLayout>
+      <ContextsProvider>
+        <NotebookSidebarLayout>
+          <SidebarInset>{children}</SidebarInset>
+        </NotebookSidebarLayout>
+      </ContextsProvider>
     </ServerSideFetchAndHydrate>
   );
 }

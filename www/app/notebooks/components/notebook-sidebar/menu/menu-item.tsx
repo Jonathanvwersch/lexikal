@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "../../../../../components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const items: { title: "Edit" | "Delete"; icon: LucideIcon }[] = [
   { title: "Edit", icon: Pencil },
@@ -26,11 +27,21 @@ type Props = Readonly<{
   href: string;
   Icon: LucideIcon;
   label: string;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onCheck?: () => void;
+  checked?: boolean;
 }>;
 
-export function MenuItem({ href, Icon, label, onEdit, onDelete }: Props) {
+export function MenuItem({
+  href,
+  Icon,
+  label,
+  onEdit,
+  onDelete,
+  onCheck,
+  checked,
+}: Props) {
   const pathname = usePathname();
   const isActive = pathname.includes(href);
 
@@ -45,6 +56,15 @@ export function MenuItem({ href, Icon, label, onEdit, onDelete }: Props) {
           <span>{label}</span>
         </Link>
       </SidebarMenuButton>
+      {onCheck && (
+        <SidebarMenuAction asChild>
+          <Checkbox
+            checked={checked}
+            onClick={onCheck}
+            className="h-4 w-4 rounded-[4px] mr-[2px] mt-[2px]"
+          />
+        </SidebarMenuAction>
+      )}
 
       {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>

@@ -47,3 +47,34 @@ export const postChunkContext = async ({
   );
   return res.data;
 };
+
+interface UpdateContextParams {
+  notebookId: string;
+  contextId: string;
+  data: {
+    send: boolean;
+  };
+}
+
+export async function updateContext({
+  notebookId,
+  contextId,
+  data,
+}: UpdateContextParams) {
+  const response = await fetch(
+    `/api/notebooks/${notebookId}/contexts/${contextId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update context");
+  }
+
+  return response.json();
+}

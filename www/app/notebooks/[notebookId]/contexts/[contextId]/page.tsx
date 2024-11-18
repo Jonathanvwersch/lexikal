@@ -5,6 +5,6 @@ type Props = Readonly<{
   params: Promise<NotebookParams>;
 }>;
 
-export default async function ContextPage({ params }: Props) {
+export default function ContextPage({ params }: Props) {
   return <NotebookLayout params={params}></NotebookLayout>;
 }

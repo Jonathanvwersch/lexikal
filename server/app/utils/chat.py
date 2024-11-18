@@ -24,9 +24,10 @@ async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) ->
             'query_embedding': query_embedding,
             'context_ids': context_ids,
             'match_count': 5,
-            'match_threshold': 0.78
+            'match_threshold': 0.5
         }
     ).execute()
+
     
     if not response.data:
         return []
@@ -71,6 +72,5 @@ async def generate_response(
         "context_id": chunk["context_id"],
         "content": chunk["content"][:200]  # Preview of the chunk
     } for chunk in chunks]
-
     
     return response.choices[0].message.content, sources 

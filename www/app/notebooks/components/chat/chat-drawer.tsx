@@ -25,11 +25,8 @@ export const NotebookChatDrawer = ({
         top-3 bottom-0
         left-0 right-0
         pb-16
-        
         bg-muted/25 
-        rounded-tr-[8px] rounded-tl-[8px]
-        border-gray-200 border-solid border-[1px]
-        
+        rounded-tr-[8px] rounded-tl-[8px]        
         transition-opacity duration-500 ease-in-out
       `,
         isOpen ? "opacity-100" : "opacity-0"

@@ -23,7 +23,7 @@ type Props = Readonly<{
   href: string;
   Icon: LucideIcon;
   label: string;
-  children: React.JSX.Element[] | undefined;
+  children: React.JSX.Element | null;
   AddComponent: React.ReactNode;
   emptyMessage?: string;
   defaultOpen?: boolean;
@@ -80,7 +80,7 @@ export function MenuParentItem({
         </SidebarMenuButton>
         <CollapsibleContent>
           <SidebarMenuSub className="pr-[1px] mr-0">
-            {children?.length ? (
+            {children ? (
               children
             ) : (
               <span className="text-muted-foreground text-xs">

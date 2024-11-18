@@ -3,10 +3,12 @@
 import { NotebookChatInput } from "../../components/chat/chat-input";
 import { NotebookChatSendButton } from "../../components/chat/chat-send-button";
 import { useCallback, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ChatMessage } from "@/generated/types.gen";
 import { useChatWithNotebook } from "@/react-query/chat";
 import { NotebookChatDrawer } from "../../components/chat/chat-drawer";
+import { cn } from "@/utils/styles";
+import { useContextsContext } from "../context/use-contexts-context";
 
 type NotebookLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -19,6 +21,7 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { checkedContexts } = useContextsContext();
 
   const chatMutation = useChatWithNotebook({
     onSuccess: (data) => {
@@ -58,6 +61,7 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
         body: {
           message: message,
           history: history,
+          context_ids: checkedContexts,
         },
       },
     });
@@ -70,19 +74,25 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
   };
 
   return (
-    <div className="w-full h-full relative z-1">
-      <main className="relative overflow-auto h-full z-1">
+    <div className="w-full h-full relative p-4">
+      <main className={cn("relative overflow-auto h-full z-0")}>
         {children}
-        <div className="absolute bottom-[16px] w-full left-0 right-0 px-4 max-w-[1000px] mx-auto z-10">
-          <NotebookChatInput
-            isDrawerOpen={openDrawer}
-            onClose={handleDrawerClose}
-            message={message}
-            setMessage={setMessage}
-            SendComponent={<NotebookChatSendButton onSend={handleSend} />}
-          />
-        </div>
       </main>
+      <div className="absolute bottom-[16px] w-full left-0 right-0 px-4 max-w-[1000px] mx-auto z-10 flex flex-col gap-2">
+        <NotebookChatInput
+          sourcesCount={checkedContexts.length}
+          isDrawerOpen={openDrawer}
+          onClose={handleDrawerClose}
+          message={message}
+          setMessage={setMessage}
+          SendComponent={
+            <NotebookChatSendButton
+              onSend={handleSend}
+              disabled={checkedContexts.length === 0}
+            />
+          }
+        />
+      </div>
       <NotebookChatDrawer
         bottomRef={bottomRef}
         isOpen={openDrawer}

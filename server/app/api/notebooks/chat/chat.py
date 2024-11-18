@@ -33,7 +33,7 @@ async def chat_with_notebook(
         context_ids=context_ids,
         query=chat_request.message
     )
-    
+
     # Generate response using chunks and chat history
     response, sources = await generate_response(
         query=chat_request.message,

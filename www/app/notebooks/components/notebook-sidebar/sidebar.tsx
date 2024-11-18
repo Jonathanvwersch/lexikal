@@ -11,6 +11,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { Logo } from "@/components/ui/logo";
+import { FlashcardsDecksMenu } from "./flashcards-decks/flashcard-decks-menu";
 import { ContextsMenu } from "./contexts/contexts-menu";
 
 export function NotebookSidebar({
@@ -30,6 +31,7 @@ export function NotebookSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               <ContextsMenu />
+              <FlashcardsDecksMenu />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

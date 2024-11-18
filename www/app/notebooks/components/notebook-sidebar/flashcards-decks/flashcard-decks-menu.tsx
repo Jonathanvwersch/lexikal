@@ -24,7 +24,7 @@ const mockInitialContexts = [
   },
 ];
 
-export function FlashcardsMenu() {
+export function FlashcardsDecksMenu() {
   const pathname = usePathname();
 
   return (
@@ -34,16 +34,20 @@ export function FlashcardsMenu() {
       label="Flashcard Decks"
       AddComponent={<CreateFlashcardDecks />}
     >
-      {mockInitialContexts.map((context) => (
-        <MenuItem
-          key={context.id}
-          href={`${pathname}/flashcards-decks/${context.id}`}
-          Icon={StickyNote}
-          label={context.name}
-          onEdit={() => {}}
-          onDelete={() => {}}
-        />
-      ))}
+      {mockInitialContexts.length ? (
+        <>
+          {mockInitialContexts.map((context) => (
+            <MenuItem
+              key={context.id}
+              href={`${pathname}/flashcards-decks/${context.id}`}
+              Icon={StickyNote}
+              label={context.name}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
+          ))}
+        </>
+      ) : null}
     </MenuParentItem>
   );
 }
