@@ -1,21 +1,29 @@
 from typing import List, Tuple
+import voyageai
+import numpy as np
 
 from ..models.chunks import Chunk
 from ..schemas.chat import ChatMessage
-from langchain_openai import OpenAIEmbeddings
 from supabase import Client
 from openai import AsyncOpenAI
-import os
 
-# Initialize the async client
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Initialize the clients
+openai_client = AsyncOpenAI()
+voyage_client = voyageai.Client()  # This will use VOYAGE_API_KEY from environment variables
 
 async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) -> List[Chunk]:
     """
     Retrieve relevant chunks from the database using semantic search
     """
-    embeddings = OpenAIEmbeddings()
-    query_embedding = embeddings.embed_query(query)
+    # Get query embedding using Voyage AI
+    query_embedding = voyage_client.embed(
+        [query],
+        model="voyage-3",
+        input_type="query"
+    ).embeddings[0]
+
+    # Add after getting embeddings
+    print(f"Query embedding norm: {np.linalg.norm(query_embedding)}")
 
     # Perform vector similarity search against chunks
     response = db.rpc(
@@ -23,16 +31,36 @@ async def get_relevant_chunks(db: Client, context_ids: List[str], query: str) ->
         {
             'query_embedding': query_embedding,
             'context_ids': context_ids,
-            'match_count': 5,
-            'match_threshold': 0.5
+            'match_threshold': 0.0,  # Remove threshold temporarily
+            'match_count': 10
         }
     ).execute()
 
-    
+    # Add after vector search
+    print(f"Initial matches: response")
+
     if not response.data:
         return []
-        
-    return response.data
+
+    # Extract just the content for reranking
+    contents = [chunk['content'] for chunk in response.data]
+    
+    # Rerank using only the text content
+    reranked = voyage_client.rerank(
+        query, 
+        contents,  # Pass only the text content
+        model="rerank-2",
+        top_k=3
+    )
+
+    # Access the results property of RerankingObject
+    scored_chunks = []
+    for result in reranked.results:
+        original_chunk = response.data[result.index]
+        original_chunk['similarity'] = result.relevance_score
+        scored_chunks.append(original_chunk)
+
+    return scored_chunks
 
 async def generate_response(
     query: str,
@@ -55,13 +83,13 @@ async def generate_response(
     # Add system message with context
     messages.append({
         "role": "system",
-        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}. If you are unable to find the answer in the context, say so. If "
+        "content": f"You are a helpful AI assistant. Use the following context to answer the user's question:\n\n{context}. If you are unable to find the answer in the context, say that the answer is not in the selected context and the user should upload more contexts or select additional contexts."
     })
     # Add user's query
     messages.append({"role": "user", "content": query})
     
     # Get response from ChatGPT using the async client
-    response = await client.chat.completions.create(
+    response = await openai_client.chat.completions.create(
         model="gpt-4",
         messages=messages,
         temperature=0.7

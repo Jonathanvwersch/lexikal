@@ -23,9 +23,9 @@ export function ChatMessages({
   isReceivingMessage,
   bottomRef,
 }: Props) {
-  // const me = useCacheQuery<GetUserUsersMeGetResponse>({
-  //   queryKey: queryKeys.users.getMe,
-  // });
+  const me = useCacheQuery<GetUserUsersMeGetResponse>({
+    queryKey: queryKeys.users.getMe,
+  });
   const loadingRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -57,8 +57,8 @@ export function ChatMessages({
           >
             {message.role === "user" ? (
               <ChatBubbleAvatar
-                // src={me?.profileImageUrl}
-                // fallback={me?.name?.[0]}
+                src={me?.profileImageUrl}
+                fallback={me?.name?.[0]}
                 className="rounded-full"
               />
             ) : (

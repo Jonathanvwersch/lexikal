@@ -29,7 +29,7 @@ export function NotebookChatInput({
           onChange={(e) => setMessage(e.target.value)}
         />
         <div className="text-xs text-muted-foreground border border-muted rounded-md px-1.5 flex items-center h-10 whitespace-nowrap">
-          {sourcesCount} {sourcesCount === 1 ? "source" : "sources"}
+          {sourcesCount} {sourcesCount === 1 ? "context" : "contexts"}
         </div>
         <Button
           size="icon"

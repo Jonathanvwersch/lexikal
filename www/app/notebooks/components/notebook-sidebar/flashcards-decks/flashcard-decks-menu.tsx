@@ -6,23 +6,7 @@ import { MenuItem } from "../menu/menu-item";
 import { usePathname } from "next/navigation";
 import { CreateFlashcardDecks } from "./create-flashcard-decks";
 
-const mockInitialContexts = [
-  {
-    id: "1",
-    name: "Flashcard Deck 1",
-    type: "url",
-  },
-  {
-    id: "2",
-    name: "Flashcard Deck 2",
-    type: "file",
-  },
-  {
-    id: "3",
-    name: "Flashcard Deck 3",
-    type: "text",
-  },
-];
+const mockInitialContexts = [];
 
 export function FlashcardsDecksMenu() {
   const pathname = usePathname();
@@ -33,6 +17,7 @@ export function FlashcardsDecksMenu() {
       Icon={Layers3}
       label="Flashcard Decks"
       AddComponent={<CreateFlashcardDecks />}
+      emptyMessage="No flashcard decks found"
     >
       {mockInitialContexts.length ? (
         <>
