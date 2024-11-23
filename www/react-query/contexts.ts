@@ -1,12 +1,21 @@
 import { QueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
-import { getContexts, postContextMetadata } from "../api/contexts";
+import {
+  getContextFile,
+  getContexts,
+  postContextMarkdown,
+  postContextMetadata,
+} from "../api/contexts";
 import {
   ContextMetadataPostResponse,
   ContextsGetResponse,
   ListContextsNotebooksNotebookIdContextsGetError,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostError,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
+  ContextFileGetResponse,
+  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError,
+  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData,
+  FileMarkdownResponse,
 } from "@/generated/types.gen";
 import { MutationOptions } from "./types";
 import { ApiParams } from "@/api/types";
@@ -44,5 +53,40 @@ export const useGetContexts = (
       getContexts({
         data: { path: { notebook_id: params.notebookId } },
       }),
+  });
+};
+
+export const useGetContextFile = (
+  params: { notebookId: string; contextId: string },
+  options?: QueryOptions<ContextFileGetResponse | undefined>
+) => {
+  return useQuery<ContextFileGetResponse | undefined>({
+    ...options,
+    queryKey: queryKeys.contexts.getFile(params.notebookId, params.contextId),
+    queryFn: () =>
+      getContextFile({
+        data: {
+          path: {
+            notebook_id: params.notebookId,
+            context_id: params.contextId,
+          },
+        },
+      }),
+  });
+};
+
+export const usePostContextMarkdown = (
+  options?: MutationOptions<
+    typeof postContextMarkdown,
+    ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError
+  >
+) => {
+  return useMutation<
+    FileMarkdownResponse | undefined,
+    ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError,
+    ApiParams<ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData>
+  >({
+    ...options,
+    mutationFn: postContextMarkdown,
   });
 };

@@ -6,7 +6,7 @@ import { useCacheQuery } from "@/hooks/use-cache-query";
 import { queryKeys } from "@/react-query/keys";
 import { ContextsGetResponse } from "@/generated/types.gen";
 import { RESOURCE_ICON_MAP } from "@/app/notebooks/constants";
-import { useContextsContext } from "@/app/notebooks/[notebookId]/context/use-contexts-context";
+import { useContextsContext } from "@/app/notebooks/[notebookId]/react-context/use-contexts-context";
 import { MenuItem } from "../menu/menu-item";
 import { MenuParentItem } from "../menu/menu-parent-item";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,9 +15,9 @@ export function ContextsMenu() {
   const params = useParams();
   const notebookId = params.notebookId as string;
   const basePath = `/notebooks/${notebookId}/contexts`;
-  const contextData = useCacheQuery<ContextsGetResponse>({
-    queryKey: queryKeys.contexts.get(notebookId),
-  });
+  const contextData = useCacheQuery<ContextsGetResponse>(
+    queryKeys.contexts.get(notebookId)
+  );
   const { checkedContexts, setCheckedContexts } = useContextsContext();
 
   const handleCheck = (contextId: string) => {

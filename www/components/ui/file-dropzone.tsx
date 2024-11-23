@@ -106,74 +106,76 @@ export default function FileDropzone({
   );
 
   return (
-    <Card
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-      onClick={() => document.getElementById("fileInput")?.click()}
-      tabIndex={0}
-      role="button"
-      className={`mx-auto flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg transition-colors ${
-        dragActive ? "border-primary" : "border-input"
-      } hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
-    >
-      <CardContent className="p-4">
-        <div className="flex items-center flex-col justify-center">
-          <UploadCloud className="w-6 h-6 mb-4 text-muted-foreground" />
-          <Label
-            htmlFor="fileInput"
-            className="text-sm text-muted-foreground cursor-pointer"
-          >
-            <span className="font-semibold">Click to upload</span> or drag and
-            drop
-          </Label>
-          <p className="text-xs text-muted-foreground mt-2">
-            {acceptedFileTypes.join(", ")} (Max file size:{" "}
-            {maxFileSize / 1024 / 1024}MB)
-          </p>
-          <Input
-            id="fileInput"
-            type="file"
-            required={required}
-            className="hidden"
-            multiple={multiple}
-            onChange={onInputChange}
-            accept={acceptedFileTypes.join(",")}
-          />
-        </div>
-        {error && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-        {files.length > 0 && (
-          <ScrollArea className="h-32 w-full rounded-md border p-4 mt-4">
-            {files.map((file, index) => (
-              <Badge
-                key={index}
-                variant="secondary"
-                className="mr-2 mb-2 pr-1.5 text-xs font-normal"
-              >
-                {file.name}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-4 w-4 ml-1 p-0"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeFile(file);
-                  }}
+    <>
+      <Card
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onClick={() => document.getElementById("fileInput")?.click()}
+        tabIndex={0}
+        role="button"
+        className={`mx-auto flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg transition-colors ${
+          dragActive ? "border-primary" : "border-input"
+        } hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+      >
+        <CardContent className="p-4 w-full">
+          <div className="flex items-center flex-col justify-center">
+            <UploadCloud className="w-6 h-6 mb-4 text-muted-foreground" />
+            <Label
+              htmlFor="fileInput"
+              className="text-sm text-muted-foreground cursor-pointer"
+            >
+              <span className="font-semibold">Click to upload</span> or drag and
+              drop
+            </Label>
+            <p className="text-xs text-muted-foreground mt-2">
+              {acceptedFileTypes.join(", ")} (Max file size:{" "}
+              {maxFileSize / 1024 / 1024}MB)
+            </p>
+            <Input
+              id="fileInput"
+              type="file"
+              required={required}
+              className="hidden"
+              multiple={multiple}
+              onChange={onInputChange}
+              accept={acceptedFileTypes.join(",")}
+            />
+          </div>
+
+          {files.length > 0 && (
+            <ScrollArea className="h-32 w-full rounded-md border p-4 mt-4 max-w-[300px] mx-auto">
+              {files.map((file, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="mr-2 mb-2 pr-1.5 text-xs font-normal"
                 >
-                  <X className="h-3 w-3" />
-                  <span className="sr-only">Remove</span>
-                </Button>
-              </Badge>
-            ))}
-          </ScrollArea>
-        )}
-      </CardContent>
-    </Card>
+                  {file.name}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-4 w-4 ml-1 p-0"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removeFile(file);
+                    }}
+                  >
+                    <X className="h-3 w-3" />
+                    <span className="sr-only">Remove</span>
+                  </Button>
+                </Badge>
+              ))}
+            </ScrollArea>
+          )}
+        </CardContent>
+      </Card>
+      {error && (
+        <Alert variant="destructive" className="mt-4 flex items-center">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+    </>
   );
 }

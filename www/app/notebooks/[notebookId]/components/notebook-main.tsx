@@ -3,12 +3,12 @@
 import { NotebookChatInput } from "../../components/chat/chat-input";
 import { NotebookChatSendButton } from "../../components/chat/chat-send-button";
 import { useCallback, useRef, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ChatMessage } from "@/generated/types.gen";
 import { useChatWithNotebook } from "@/react-query/chat";
 import { NotebookChatDrawer } from "../../components/chat/chat-drawer";
 import { cn } from "@/utils/styles";
-import { useContextsContext } from "../context/use-contexts-context";
+import { useContextsContext } from "../react-context/use-contexts-context";
 
 type NotebookLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -68,21 +68,32 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [message, openDrawer, history, notebookId, chatMutation]);
 
-  const handleDrawerClose = () => {
-    setOpenDrawer(false);
-    setMessage("");
+  const handleDrawerClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (openDrawer) {
+      setOpenDrawer(false);
+      setMessage("");
+    } else {
+      setOpenDrawer(true);
+    }
   };
 
   return (
     <div className="w-full h-full relative p-4">
-      <main className={cn("relative overflow-auto h-full z-0")}>
+      <main
+        className={cn(
+          "relative overflow-auto h-full",
+          openDrawer ? "-z-10" : "z-10"
+        )}
+      >
         {children}
       </main>
-      <div className="absolute bottom-[16px] w-full left-0 right-0 px-4 max-w-[1000px] mx-auto z-10 flex flex-col gap-2">
+      <div className="absolute bottom-[16px] w-full left-0 right-0 px-4 max-w-[1000px] mx-auto flex flex-col gap-2 z-20">
         <NotebookChatInput
           sourcesCount={checkedContexts.length}
           isDrawerOpen={openDrawer}
-          onClose={handleDrawerClose}
+          onChatDrawerClick={handleDrawerClick}
           message={message}
           setMessage={setMessage}
           SendComponent={

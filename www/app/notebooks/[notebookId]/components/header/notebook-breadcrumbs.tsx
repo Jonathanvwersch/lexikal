@@ -14,12 +14,12 @@ type Props = Readonly<{
 }>;
 
 export function NotebookBreadcrumbs({ notebookId, contextId }: Props) {
-  const contextData = useCacheQuery<ContextsGetResponse>({
-    queryKey: queryKeys.contexts.get(notebookId),
-  });
-  const notebookData = useCacheQuery<NotebooksGetResponse>({
-    queryKey: queryKeys.notebooks.get,
-  });
+  const contextData = useCacheQuery<ContextsGetResponse>(
+    queryKeys.contexts.get(notebookId)
+  );
+  const notebookData = useCacheQuery<NotebooksGetResponse>(
+    queryKeys.notebooks.get
+  );
 
   const notebook = notebookData?.notebooks.find(
     (notebook) => notebook.id === notebookId

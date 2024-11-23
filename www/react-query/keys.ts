@@ -5,6 +5,8 @@ export const queryKeys = {
   contexts: {
     get: (notebookId: string) =>
       [...queryKeys.notebooks.get, notebookId, "contexts"] as const,
+    getFile: (notebookId: string, contextId: string) =>
+      [...queryKeys.contexts.get(notebookId), contextId] as const,
   },
   users: {
     getMe: ["users", "me"],

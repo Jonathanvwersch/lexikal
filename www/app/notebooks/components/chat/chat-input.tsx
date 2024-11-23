@@ -6,7 +6,7 @@ type Props = Readonly<{
   SendComponent: React.ReactNode;
   message: string;
   setMessage: (message: string) => void;
-  onClose: () => void;
+  onChatDrawerClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isDrawerOpen: boolean;
   sourcesCount: number;
 }>;
@@ -16,7 +16,7 @@ export function NotebookChatInput({
   SendComponent,
   message,
   setMessage,
-  onClose,
+  onChatDrawerClick,
   sourcesCount,
 }: Props) {
   return (
@@ -24,7 +24,11 @@ export function NotebookChatInput({
       <div className="flex items-center gap-2">
         <ChatInput
           disabled={sourcesCount === 0}
-          placeholder="Type your message here..."
+          placeholder={`${
+            sourcesCount === 0
+              ? "Add contexts to start chatting"
+              : "Type your message here..."
+          }`}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
@@ -34,10 +38,9 @@ export function NotebookChatInput({
         <Button
           size="icon"
           tooltip="Close chat drawer"
-          disabled={!isDrawerOpen || sourcesCount === 0}
           variant="outline"
           className="ml-auto gap-1.5"
-          onClick={onClose}
+          onClick={onChatDrawerClick}
         >
           {isDrawerOpen ? <MessageCircle /> : <MessageCircleMore />}
         </Button>

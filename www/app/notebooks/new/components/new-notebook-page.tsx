@@ -16,6 +16,11 @@ import { z } from "zod";
 import { usePostNotebook } from "@/react-query/notebooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { addNotebookCache } from "@/react-query/cache-update/notebooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/react-query/keys";
+import { useCacheQuery } from "@/hooks/use-cache-query";
+import { GetUserUsersMeGetResponse } from "@/generated";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -24,12 +29,17 @@ const formSchema = z.object({
 
 export function NewNotebookPage() {
   const router = useRouter();
+  const user = useCacheQuery<GetUserUsersMeGetResponse>(queryKeys.users.getMe);
   const { mutate: createNotebook, isPending } = usePostNotebook({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Notebook successfully created");
-      router.push("/");
+      if (data && user?.id) {
+        addNotebookCache(queryClient, data, user.id);
+      }
+      router.push("/notebooks");
     },
   });
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,13 +49,11 @@ export function NewNotebookPage() {
     },
   });
 
-  function handleSubmit(data: z.infer<typeof formSchema>) {
+  async function handleSubmit(data: z.infer<typeof formSchema>) {
+    const newNotebook = { name: data.name, description: data.description };
     createNotebook({
       data: {
-        body: {
-          name: data.name,
-          description: data.description,
-        },
+        body: newNotebook,
       },
     });
   }

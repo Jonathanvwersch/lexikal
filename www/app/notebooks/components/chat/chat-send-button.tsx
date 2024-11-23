@@ -23,6 +23,7 @@ export function NotebookChatSendButton({ onSend, disabled }: Props) {
       className="ml-auto gap-1.5"
       onClick={handleSend}
       disabled={disabled}
+      type="submit"
     >
       <SendHorizontal className="size-3.5" />
     </Button>

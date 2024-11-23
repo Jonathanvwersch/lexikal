@@ -6,9 +6,9 @@ import { queryKeys } from "@/react-query/keys";
 import { NotebooksGetResponse } from "@/generated";
 
 export function Notebooks() {
-  const data = useCacheQuery<NotebooksGetResponse | undefined>({
-    queryKey: queryKeys.notebooks.get,
-  });
+  const data = useCacheQuery<NotebooksGetResponse | undefined>(
+    queryKeys.notebooks.get
+  );
   const notebooks = data?.notebooks;
 
   return (

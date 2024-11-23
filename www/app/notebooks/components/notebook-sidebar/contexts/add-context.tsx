@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,18 +14,18 @@ import FileDropzone from "@/components/ui/file-dropzone";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import omit from "lodash.omit";
 
 import { SidebarMenuAction } from "@/components/ui/sidebar";
 import { Plus } from "lucide-react";
 import { useCallback } from "react";
 import { useState } from "react";
-import { usePostContextMetadata } from "@/react-query/contexts";
+import {
+  usePostContextMarkdown,
+  usePostContextMetadata,
+} from "@/react-query/contexts";
 import { useParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/react-query/keys";
-import { ContextsGetResponse } from "@/generated/types.gen";
-import { updateContextCache } from "@/react-query/updaters/contexts";
+import { updateContextCache } from "@/react-query/cache-update/contexts";
 import { postChunkContext } from "@/api/contexts";
 import { uploadFileToSupabase } from "@/api/storage";
 
@@ -44,6 +46,9 @@ export function AddContext() {
     setDescription("");
   };
 
+  const { mutate: postContextMarkdown, isPending: isUploadingMarkdown } =
+    usePostContextMarkdown();
+
   const { mutate: postContextMetadata, isPending: isUploadingMetadata } =
     usePostContextMetadata({
       onSuccess: async (context) => {
@@ -61,11 +66,20 @@ export function AddContext() {
         } catch (error) {
           console.error("Upload error:", error);
         } finally {
-          await postChunkContext({
-            data: {
-              path: { notebook_id: notebookId, context_id: context.id },
-            },
-          });
+          const promises = [
+            postChunkContext({
+              data: {
+                path: { notebook_id: notebookId, context_id: context.id },
+              },
+            }),
+            // postContextMarkdown({
+            //   data: {
+            //     path: { notebook_id: notebookId, context_id: context.id },
+            //   },
+            // }),
+          ];
+
+          await Promise.all(promises);
           updateContextCache(queryClient, notebookId, context);
           setUploadingFile(false);
           handleClose();
@@ -75,6 +89,8 @@ export function AddContext() {
 
   const handleFileChange = useCallback((files: File[]) => {
     setFiles(files);
+    const fileNameWithoutExtension = files[0].name.split(".")[0];
+    setName(fileNameWithoutExtension);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,7 +108,8 @@ export function AddContext() {
     });
   };
 
-  const isUploading = isUploadingMetadata || uploadingFile;
+  const isUploading =
+    isUploadingMetadata || uploadingFile || isUploadingMarkdown;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -134,6 +151,7 @@ export function AddContext() {
               />
             </div>
             <FileDropzone
+              maxFiles={1}
               required
               onFileChange={handleFileChange}
               files={files}

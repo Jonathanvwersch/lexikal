@@ -11,6 +11,7 @@ import { useCacheQuery } from "@/hooks/use-cache-query";
 import Logo from "@/public/icons/logo.png";
 import { queryKeys } from "@/react-query/keys";
 import { useLayoutEffect, useRef } from "react";
+import { Loader2 } from "lucide-react";
 
 type Props = Readonly<{
   messages: ChatMessage[];
@@ -23,9 +24,7 @@ export function ChatMessages({
   isReceivingMessage,
   bottomRef,
 }: Props) {
-  const me = useCacheQuery<GetUserUsersMeGetResponse>({
-    queryKey: queryKeys.users.getMe,
-  });
+  const me = useCacheQuery<GetUserUsersMeGetResponse>(queryKeys.users.getMe);
   const loadingRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -72,6 +71,12 @@ export function ChatMessages({
               variant={message.role === "user" ? "sent" : "received"}
             >
               {message.content}
+              {/* {isReceivingMessage && message.role === "=" && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>Analyzing selected contexts...</span>
+                </div>
+              )} */}
             </ChatBubbleMessage>
           </ChatBubble>
         ))}

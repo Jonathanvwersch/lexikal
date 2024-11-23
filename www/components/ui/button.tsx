@@ -3,6 +3,12 @@ import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/styles";
 import { Icons } from "@/assets/icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -62,6 +68,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
+  tooltip?: string;
 }
 
 export type ButtonIconProps = IconProps | IconRefProps;
@@ -79,12 +86,13 @@ const Button = React.forwardRef<
       isLoading = false,
       Icon,
       iconPlacement = "left",
+      tooltip,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
-    return (
+    const button = (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
@@ -101,6 +109,19 @@ const Button = React.forwardRef<
         )}
       </Comp>
     );
+
+    if (tooltip) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipContent>{tooltip}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return button;
   }
 );
 Button.displayName = "Button";

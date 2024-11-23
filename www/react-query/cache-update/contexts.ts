@@ -1,4 +1,4 @@
-import { ContextsGetResponse } from "@/generated";
+import { ContextsGetResponse } from "@/generated/types.gen";
 
 import omit from "lodash.omit";
 

@@ -41,7 +41,7 @@ function _Logo({
   );
 
   return asLink ? (
-    <Link href="/" className="flex items-center gap-2">
+    <Link href="/notebooks" className="flex items-center gap-2">
       {body}
     </Link>
   ) : (

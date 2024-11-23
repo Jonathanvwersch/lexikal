@@ -19,6 +19,20 @@ export type ChatResponse = {
 };
 
 /**
+ * Response model for getting a context file
+ */
+export type ContextFileGetResponse = {
+    /**
+     * The file content
+     */
+    content: string;
+    /**
+     * The media type of the file
+     */
+    mediaType: string;
+};
+
+/**
  * Response model for getting a single context
  */
 export type ContextGetResponse = {
@@ -107,6 +121,16 @@ export type ContextsGetResponse = {
 };
 
 export type ContextType = 'pdf' | 'external_url' | 'free_form_text';
+
+export type FileMarkdownResponse = {
+    id: string;
+    contextId: string;
+    content: string;
+    createdAt: Date;
+    images: ({
+    [key: string]: (string);
+} | null);
+};
 
 export type HttpValidationError = {
     detail?: Array<ValidationError>;
@@ -233,9 +257,42 @@ export type ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostDa
     };
 };
 
-export type ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostResponse = (unknown);
+export type ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostResponse = (void);
 
 export type ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostError = (HttpValidationError);
+
+export type GetFileNotebooksNotebookIdContextsContextIdFileGetData = {
+    path: {
+        context_id: string;
+        notebook_id: string;
+    };
+};
+
+export type GetFileNotebooksNotebookIdContextsContextIdFileGetResponse = (ContextFileGetResponse);
+
+export type GetFileNotebooksNotebookIdContextsContextIdFileGetError = (HttpValidationError);
+
+export type ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData = {
+    path: {
+        context_id: string;
+        notebook_id: string;
+    };
+};
+
+export type ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostResponse = (FileMarkdownResponse);
+
+export type ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError = (HttpValidationError);
+
+export type GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetData = {
+    path: {
+        context_id: string;
+        notebook_id: string;
+    };
+};
+
+export type GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetResponse = (FileMarkdownResponse);
+
+export type GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetError = (HttpValidationError);
 
 export type ChatWithNotebookNotebooksNotebookIdChatPostData = {
     body: ChatRequest;
@@ -300,5 +357,28 @@ export const NotebookPostResponseModelResponseTransformer: NotebookPostResponseM
 
 export const CreateNotebookNotebooksPostResponseTransformer: CreateNotebookNotebooksPostResponseTransformer = async (data) => {
     NotebookPostResponseModelResponseTransformer(data);
+    return data;
+};
+
+export type ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostResponseTransformer = (data: any) => Promise<ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostResponse>;
+
+export type FileMarkdownResponseModelResponseTransformer = (data: any) => FileMarkdownResponse;
+
+export const FileMarkdownResponseModelResponseTransformer: FileMarkdownResponseModelResponseTransformer = data => {
+    if (data?.createdAt) {
+        data.createdAt = new Date(data.createdAt);
+    }
+    return data;
+};
+
+export const ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostResponseTransformer: ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostResponseTransformer = async (data) => {
+    FileMarkdownResponseModelResponseTransformer(data);
+    return data;
+};
+
+export type GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetResponseTransformer = (data: any) => Promise<GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetResponse>;
+
+export const GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetResponseTransformer: GetMarkdownNotebooksNotebookIdContextsContextIdMarkdownGetResponseTransformer = async (data) => {
+    FileMarkdownResponseModelResponseTransformer(data);
     return data;
 };

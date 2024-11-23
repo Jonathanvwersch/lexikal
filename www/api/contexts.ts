@@ -1,4 +1,6 @@
 import {
+  convertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPost,
+  getFileNotebooksNotebookIdContextsContextIdFileGet,
   listContextsNotebooksNotebookIdContextsGet,
   processDocumentChunksNotebooksNotebookIdContextsContextIdChunkPost,
   uploadMetadataNotebooksNotebookIdContextsMetadataPost,
@@ -7,6 +9,8 @@ import {
   ListContextsNotebooksNotebookIdContextsGetData,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
   ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData,
+  GetFileNotebooksNotebookIdContextsContextIdFileGetData,
+  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData,
 } from "@/generated/types.gen";
 
 import { authWrapper } from "./auth";
@@ -48,33 +52,27 @@ export const postChunkContext = async ({
   return res.data;
 };
 
-interface UpdateContextParams {
-  notebookId: string;
-  contextId: string;
-  data: {
-    send: boolean;
-  };
+export async function getContextFile({
+  data,
+  isServer,
+}: ApiParams<GetFileNotebooksNotebookIdContextsContextIdFileGetData>) {
+  const response = await authWrapper(
+    getFileNotebooksNotebookIdContextsContextIdFileGet,
+    data,
+    isServer
+  );
+  return response.data;
 }
 
-export async function updateContext({
-  notebookId,
-  contextId,
+export async function postContextMarkdown({
   data,
-}: UpdateContextParams) {
-  const response = await fetch(
-    `/api/notebooks/${notebookId}/contexts/${contextId}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
+  isServer,
+}: ApiParams<ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData>) {
+  const response = await authWrapper(
+    convertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPost,
+    data,
+    isServer
   );
 
-  if (!response.ok) {
-    throw new Error("Failed to update context");
-  }
-
-  return response.json();
+  return response.data;
 }

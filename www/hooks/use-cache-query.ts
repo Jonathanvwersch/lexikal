@@ -1,11 +1,7 @@
 import { QueryKey } from "@/react-query/keys";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-type Props = Readonly<{
-  queryKey: QueryKey;
-}>;
-
-export function useCacheQuery<T>({ queryKey }: Props) {
+export function useCacheQuery<T>(queryKey: QueryKey) {
   const queryClient = useQueryClient();
   const { data } = useQuery<T>({
     queryKey,

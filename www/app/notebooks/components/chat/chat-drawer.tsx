@@ -18,8 +18,7 @@ export const NotebookChatDrawer = ({
   return (
     <div
       className={cn(
-        `
-        z-0 
+        `        
         overflow-auto
         absolute mx-3
         top-3 bottom-0
@@ -29,6 +28,7 @@ export const NotebookChatDrawer = ({
         rounded-tr-[8px] rounded-tl-[8px]        
         transition-opacity duration-500 ease-in-out
       `,
+        isOpen ? "z-10" : "z-0",
         isOpen ? "opacity-100" : "opacity-0"
       )}
     >
