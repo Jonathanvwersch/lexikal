@@ -3,10 +3,10 @@ export const queryKeys = {
     get: ["notebooks"],
   },
   contexts: {
-    get: (notebookId: string) =>
+    getAll: (notebookId: string) =>
       [...queryKeys.notebooks.get, notebookId, "contexts"] as const,
-    getFile: (notebookId: string, contextId: string) =>
-      [...queryKeys.contexts.get(notebookId), contextId] as const,
+    get: (notebookId: string, contextId: string) =>
+      [...queryKeys.contexts.getAll(notebookId), contextId] as const,
   },
   users: {
     getMe: ["users", "me"],

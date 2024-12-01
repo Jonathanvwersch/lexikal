@@ -1,16 +1,16 @@
 import {
-  convertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPost,
   getFileNotebooksNotebookIdContextsContextIdFileGet,
-  listContextsNotebooksNotebookIdContextsGet,
+  getContextsNotebooksNotebookIdContextsGet,
   processDocumentChunksNotebooksNotebookIdContextsContextIdChunkPost,
   uploadMetadataNotebooksNotebookIdContextsMetadataPost,
+  getContextNotebooksNotebookIdContextsContextIdGet,
 } from "@/generated/services.gen";
 import {
-  ListContextsNotebooksNotebookIdContextsGetData,
+  GetContextsNotebooksNotebookIdContextsGetData,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
   ProcessDocumentChunksNotebooksNotebookIdContextsContextIdChunkPostData,
   GetFileNotebooksNotebookIdContextsContextIdFileGetData,
-  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData,
+  GetContextNotebooksNotebookIdContextsContextIdGetData,
 } from "@/generated/types.gen";
 
 import { authWrapper } from "./auth";
@@ -31,9 +31,21 @@ export const postContextMetadata = async ({
 export const getContexts = async ({
   data,
   isServer,
-}: ApiParams<ListContextsNotebooksNotebookIdContextsGetData>) => {
+}: ApiParams<GetContextsNotebooksNotebookIdContextsGetData>) => {
   const res = await authWrapper(
-    listContextsNotebooksNotebookIdContextsGet,
+    getContextsNotebooksNotebookIdContextsGet,
+    data,
+    isServer
+  );
+  return res.data;
+};
+
+export const getContext = async ({
+  data,
+  isServer,
+}: ApiParams<GetContextNotebooksNotebookIdContextsContextIdGetData>) => {
+  const res = await authWrapper(
+    getContextNotebooksNotebookIdContextsContextIdGet,
     data,
     isServer
   );
@@ -61,18 +73,5 @@ export async function getContextFile({
     data,
     isServer
   );
-  return response.data;
-}
-
-export async function postContextMarkdown({
-  data,
-  isServer,
-}: ApiParams<ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData>) {
-  const response = await authWrapper(
-    convertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPost,
-    data,
-    isServer
-  );
-
   return response.data;
 }

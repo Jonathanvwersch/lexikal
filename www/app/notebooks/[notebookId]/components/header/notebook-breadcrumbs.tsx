@@ -15,7 +15,7 @@ type Props = Readonly<{
 
 export function NotebookBreadcrumbs({ notebookId, contextId }: Props) {
   const contextData = useCacheQuery<ContextsGetResponse>(
-    queryKeys.contexts.get(notebookId)
+    queryKeys.contexts.getAll(notebookId)
   );
   const notebookData = useCacheQuery<NotebooksGetResponse>(
     queryKeys.notebooks.get

@@ -16,7 +16,7 @@ export function ContextsMenu() {
   const notebookId = params.notebookId as string;
   const basePath = `/notebooks/${notebookId}/contexts`;
   const contextData = useCacheQuery<ContextsGetResponse>(
-    queryKeys.contexts.get(notebookId)
+    queryKeys.contexts.getAll(notebookId)
   );
   const { checkedContexts, setCheckedContexts } = useContextsContext();
 

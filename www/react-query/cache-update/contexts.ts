@@ -11,7 +11,7 @@ export function updateContextCache(
   context: ContextsGetResponse["contexts"][number]
 ) {
   queryClient.setQueryData<ContextsGetResponse>(
-    queryKeys.contexts.get(notebookId),
+    queryKeys.contexts.getAll(notebookId),
     (oldData) => {
       const newContext = omit(context, "signedUpload");
       return {

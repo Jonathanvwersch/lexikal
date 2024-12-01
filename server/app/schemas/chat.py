@@ -12,6 +12,22 @@ class ChatMessage(BaseModel):
     content: str
 
 
+class ChatMessageMetadata(BaseModel):
+    """Metadata for a chat message."""
+
+    page: int
+
+
+class ChatMessageSource(BaseModel):
+    """A source for a chat message."""
+
+    context_id: str
+    content: str
+    similarity: float
+    metadata: ChatMessageMetadata
+    citation_id: str
+
+
 class ChatRequest(BaseModel):
     """Schema for incoming chat API requests."""
 
@@ -24,4 +40,4 @@ class ChatResponse(BaseModel):
     """Schema for outgoing chat API responses."""
 
     message: str
-    sources: List[dict]  # References to source materials used
+    sources: List[ChatMessageSource]

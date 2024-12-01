@@ -27,6 +27,8 @@ class Context(ContextBase):
 class ContextGetResponse(Context):
     """Response model for getting a single context."""
 
+    url: str = Field(..., description="The URL of where the context is stored")
+
 
 class ContextsGetResponse(CamelCaseModel):
     """Response model for getting multiple contexts."""
@@ -49,7 +51,7 @@ class ContextMetadataPostResponse(Context):
 class ContextFileGetResponse(CamelCaseModel):
     """Response model for getting a context file."""
 
-    content: str = Field(..., description="The file content")
+    url: str = Field(..., description="Signed URL for accessing the context file")
     media_type: str = Field(..., description="The media type of the file")
 
 

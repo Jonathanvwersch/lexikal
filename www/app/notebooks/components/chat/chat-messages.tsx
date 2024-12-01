@@ -6,23 +6,31 @@ import {
   ChatBubbleMessage,
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { ChatMessage, GetUserUsersMeGetResponse } from "@/generated/types.gen";
+import {
+  ContextGetResponse,
+  GetUserUsersMeGetResponse,
+} from "@/generated/types.gen";
 import { useCacheQuery } from "@/hooks/use-cache-query";
 import Logo from "@/public/icons/logo.png";
 import { queryKeys } from "@/react-query/keys";
 import { useLayoutEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
+import { formatMessageWithCitations } from "./utils/format-message-with-citations";
+import { ChatMessage, ContextSideSheetArgs } from "../../[notebookId]/types";
 
 type Props = Readonly<{
   messages: ChatMessage[];
   isReceivingMessage: boolean;
   bottomRef: React.RefObject<HTMLDivElement>;
+  onCitationClick: (args: ContextSideSheetArgs) => void;
+  contexts: ContextGetResponse[];
 }>;
 
 export function ChatMessages({
   messages,
   isReceivingMessage,
   bottomRef,
+  onCitationClick,
+  contexts,
 }: Props) {
   const me = useCacheQuery<GetUserUsersMeGetResponse>(queryKeys.users.getMe);
   const loadingRef = useRef<HTMLDivElement>(null);
@@ -70,7 +78,14 @@ export function ChatMessages({
             <ChatBubbleMessage
               variant={message.role === "user" ? "sent" : "received"}
             >
-              {message.content}
+              {message.role === "user"
+                ? message.content
+                : formatMessageWithCitations(
+                    message.content,
+                    message.sources,
+                    contexts,
+                    onCitationClick
+                  )}
               {/* {isReceivingMessage && message.role === "=" && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
                   <Loader2 className="h-3 w-3 animate-spin" />

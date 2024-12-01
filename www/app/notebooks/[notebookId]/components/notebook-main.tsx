@@ -4,11 +4,15 @@ import { NotebookChatInput } from "../../components/chat/chat-input";
 import { NotebookChatSendButton } from "../../components/chat/chat-send-button";
 import { useCallback, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { ChatMessage } from "@/generated/types.gen";
 import { useChatWithNotebook } from "@/react-query/chat";
 import { NotebookChatDrawer } from "../../components/chat/chat-drawer";
 import { cn } from "@/utils/styles";
 import { useContextsContext } from "../react-context/use-contexts-context";
+import { ContextSideSheet } from "./context-side-sheet";
+import { ChatMessage, ContextSideSheetArgs } from "../types";
+import { queryKeys } from "@/react-query/keys";
+import { useCacheQuery } from "@/hooks/use-cache-query";
+import { ContextsGetResponse } from "@/generated";
 
 type NotebookLayoutProps = Readonly<{
   children: React.ReactNode;
@@ -22,13 +26,30 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { checkedContexts } = useContextsContext();
+  const [openSideSheet, setOpenSideSheet] = useState<ContextSideSheetArgs>();
+
+  const data = useCacheQuery<ContextsGetResponse | undefined>(
+    queryKeys.contexts.getAll(notebookId)
+  );
+  const contexts = data?.contexts ?? [];
+
+  const handleSideSheetContext = useCallback(
+    (args?: ContextSideSheetArgs) => {
+      if (args) {
+        setOpenSideSheet(args);
+      } else {
+        setOpenSideSheet(undefined);
+      }
+    },
+    [openSideSheet]
+  );
 
   const chatMutation = useChatWithNotebook({
     onSuccess: (data) => {
       if (!data) return;
 
-      const assistantMessage = {
-        role: "assistant",
+      const assistantMessage: ChatMessage = {
+        role: "assistant" as const,
         content: data.message,
         sources: data.sources,
       };
@@ -46,8 +67,8 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
       setOpenDrawer(true);
     }
 
-    const userMessage = {
-      role: "user",
+    const userMessage: ChatMessage = {
+      role: "user" as const,
       content: message,
     };
 
@@ -109,6 +130,13 @@ export function NotebookMain({ children }: NotebookLayoutProps) {
         isOpen={openDrawer}
         messages={history}
         isReceivingMessage={chatMutation.isPending}
+        onCitationClick={handleSideSheetContext}
+        contexts={contexts}
+      />
+      <ContextSideSheet
+        isOpen={!!openSideSheet}
+        onClose={handleSideSheetContext}
+        {...openSideSheet}
       />
     </div>
   );

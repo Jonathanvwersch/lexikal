@@ -19,7 +19,7 @@ export default async function NotebookLayout({
 
   return (
     <ServerSideFetchAndHydrate
-      queryKeys={queryKeys.contexts.get(notebookId)}
+      queryKeys={queryKeys.contexts.getAll(notebookId)}
       queryFns={[
         () =>
           getContexts({

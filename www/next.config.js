@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: true,
   webpack(config) {
@@ -6,6 +7,7 @@ const nextConfig = {
       test: /\.svg$/,
       use: ["@svgr/webpack"],
     });
+    config.resolve.alias.canvas = false;
     return config;
   },
 };

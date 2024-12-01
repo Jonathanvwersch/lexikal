@@ -1,12 +1,15 @@
 import { ChatMessages } from "./chat-messages";
-import { ChatMessage } from "@/generated/types.gen";
 import { cn } from "@/utils/styles";
+import { ChatMessage, ContextSideSheetArgs } from "../../[notebookId]/types";
+import { ContextGetResponse } from "@/generated/types.gen";
 
 type Props = Readonly<{
   isOpen: boolean;
   messages: ChatMessage[];
   isReceivingMessage: boolean;
   bottomRef: React.RefObject<HTMLDivElement>;
+  onCitationClick: (args: ContextSideSheetArgs) => void;
+  contexts: ContextGetResponse[];
 }>;
 
 export const NotebookChatDrawer = ({
@@ -14,6 +17,8 @@ export const NotebookChatDrawer = ({
   messages,
   isReceivingMessage,
   bottomRef,
+  onCitationClick,
+  contexts,
 }: Props) => {
   return (
     <div
@@ -36,6 +41,8 @@ export const NotebookChatDrawer = ({
         bottomRef={bottomRef}
         messages={messages}
         isReceivingMessage={isReceivingMessage}
+        onCitationClick={onCitationClick}
+        contexts={contexts}
       />
     </div>
   );

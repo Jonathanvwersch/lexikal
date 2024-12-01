@@ -11,7 +11,7 @@ type Props = Readonly<{
 
 export function Contexts({ notebookId }: Props) {
   const data = useCacheQuery<ContextsGetResponse | undefined>(
-    queryKeys.contexts.get(notebookId)
+    queryKeys.contexts.getAll(notebookId)
   );
   const contexts = data?.contexts;
 

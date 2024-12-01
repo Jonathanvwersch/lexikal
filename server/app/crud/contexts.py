@@ -1,10 +1,9 @@
 """CRUD operations for managing contexts and their associated files."""
 
 import logging
-from typing import Optional, Tuple, TypedDict
+from typing import List, Optional, Tuple, TypedDict
 
-from app.models import Context, FileMarkdown
-from app.schemas.contexts import ContextGetResponse, ContextsGetResponse
+from app.models import Context
 from app.utils.storage import build_context_storage_path
 from supabase import Client
 
@@ -18,7 +17,7 @@ class ContextInsert(TypedDict):
     type: str
 
 
-async def get_contexts(db: Client, notebook_id: str) -> ContextsGetResponse:
+async def get_contexts(db: Client, notebook_id: str) -> List[Context]:
     """Get all contexts for a given notebook.
 
     Args:
@@ -26,11 +25,10 @@ async def get_contexts(db: Client, notebook_id: str) -> ContextsGetResponse:
         notebook_id: ID of the notebook to fetch contexts for
 
     Returns:
-        ContextsGetResponse containing list of contexts
+        List of Context objects
     """
     response = db.table("contexts").select("*").eq("notebook_id", notebook_id).execute()
-    contexts = [ContextGetResponse(**context) for context in response.data]
-    return ContextsGetResponse(contexts=contexts)
+    return [Context(**context) for context in response.data]
 
 
 async def post_context_metadata(
@@ -89,7 +87,7 @@ async def get_context_file(
     return file_bytes, "application/pdf"
 
 
-async def create_context(db: Client, context_data: dict) -> Optional[dict]:
+async def create_context(db: Client, context_data: dict) -> Context:
     """Store context data in the database.
 
     Args:
@@ -108,19 +106,3 @@ async def create_context(db: Client, context_data: dict) -> Optional[dict]:
     except Exception as e:
         logging.error("Error creating context: %s", str(e))
         raise
-
-
-async def get_file_markdown(db: Client, context_id: str) -> Optional[FileMarkdown]:
-    """Retrieve markdown file associated with a context.
-
-    Args:
-        db: Supabase client instance
-        context_id: ID of the context
-
-    Returns:
-        FileMarkdown object if found, None otherwise
-    """
-    response = (
-        db.table("file_markdowns").select("*").eq("context_id", context_id).execute()
-    )
-    return response.data[0] if response.data else None

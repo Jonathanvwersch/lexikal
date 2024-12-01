@@ -27,6 +27,15 @@ export const usePostNotebook = (
   });
 };
 
+/* GET NOTEBOOKS */
+
+export const getNotebooksQueryKeyAndFn = () => {
+  return {
+    queryKey: queryKeys.notebooks.get,
+    queryFn: () => getNotebooks(),
+  };
+};
+
 export const useGetNotebooks = (
   options?: QueryOptions<typeof getNotebooks, ListNotebooksNotebooksGetError>
 ) => {
@@ -35,7 +44,6 @@ export const useGetNotebooks = (
     ListNotebooksNotebooksGetError
   >({
     ...options,
-    queryKey: queryKeys.notebooks.get,
-    queryFn: () => getNotebooks(),
+    ...getNotebooksQueryKeyAndFn(),
   });
 };

@@ -20,7 +20,7 @@ export function NotebookChatInput({
   sourcesCount,
 }: Props) {
   return (
-    <form className="relative mx-4 py-2 rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1">
+    <form className="relative py-2 rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1">
       <div className="flex items-center gap-2">
         <ChatInput
           disabled={sourcesCount === 0}

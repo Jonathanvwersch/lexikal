@@ -1,24 +1,17 @@
-import { QueryOptions, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "./keys";
-import {
-  getContextFile,
-  getContexts,
-  postContextMarkdown,
-  postContextMetadata,
-} from "../api/contexts";
+import { getContexts, getContext, postContextMetadata } from "../api/contexts";
 import {
   ContextMetadataPostResponse,
   ContextsGetResponse,
-  ListContextsNotebooksNotebookIdContextsGetError,
+  GetContextsNotebooksNotebookIdContextsGetError,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostError,
   UploadMetadataNotebooksNotebookIdContextsMetadataPostData,
-  ContextFileGetResponse,
-  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError,
-  ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData,
-  FileMarkdownResponse,
 } from "@/generated/types.gen";
-import { MutationOptions } from "./types";
+import { MutationOptions, QueryOptions } from "./types";
 import { ApiParams } from "@/api/types";
+
+/* POST CONTEXT METADATA */
 
 export const usePostContextMetadata = (
   options?: MutationOptions<
@@ -36,35 +29,42 @@ export const usePostContextMetadata = (
   });
 };
 
+/* GET CONTEXTS */
+
+export const getContextsQueryKeyAndFn = (params: { notebookId: string }) => {
+  return {
+    queryKey: queryKeys.contexts.getAll(params.notebookId),
+    queryFn: () =>
+      getContexts({ data: { path: { notebook_id: params.notebookId } } }),
+  };
+};
+
 export const useGetContexts = (
   params: { notebookId: string },
   options?: QueryOptions<
-    ContextsGetResponse | undefined,
-    ListContextsNotebooksNotebookIdContextsGetError
+    typeof getContexts,
+    GetContextsNotebooksNotebookIdContextsGetError
   >
 ) => {
   return useQuery<
     ContextsGetResponse | undefined,
-    ListContextsNotebooksNotebookIdContextsGetError
+    GetContextsNotebooksNotebookIdContextsGetError
   >({
     ...options,
-    queryKey: queryKeys.contexts.get(params.notebookId),
-    queryFn: () =>
-      getContexts({
-        data: { path: { notebook_id: params.notebookId } },
-      }),
+    ...getContextsQueryKeyAndFn(params),
   });
 };
 
-export const useGetContextFile = (
-  params: { notebookId: string; contextId: string },
-  options?: QueryOptions<ContextFileGetResponse | undefined>
-) => {
-  return useQuery<ContextFileGetResponse | undefined>({
-    ...options,
-    queryKey: queryKeys.contexts.getFile(params.notebookId, params.contextId),
+/* GET CONTEXT */
+
+export const getContextQueryKeyAndFn = (params: {
+  notebookId: string;
+  contextId: string;
+}) => {
+  return {
+    queryKey: queryKeys.contexts.get(params.notebookId, params.contextId),
     queryFn: () =>
-      getContextFile({
+      getContext({
         data: {
           path: {
             notebook_id: params.notebookId,
@@ -72,21 +72,21 @@ export const useGetContextFile = (
           },
         },
       }),
-  });
+  };
 };
 
-export const usePostContextMarkdown = (
-  options?: MutationOptions<
-    typeof postContextMarkdown,
-    ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError
+export const useGetContext = (
+  params: { notebookId: string },
+  options?: QueryOptions<
+    typeof getContexts,
+    GetContextsNotebooksNotebookIdContextsGetError
   >
 ) => {
-  return useMutation<
-    FileMarkdownResponse | undefined,
-    ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostError,
-    ApiParams<ConvertToMarkdownNotebooksNotebookIdContextsContextIdToMarkdownPostData>
+  return useQuery<
+    ContextsGetResponse | undefined,
+    GetContextsNotebooksNotebookIdContextsGetError
   >({
     ...options,
-    mutationFn: postContextMarkdown,
+    ...getContextsQueryKeyAndFn(params),
   });
 };

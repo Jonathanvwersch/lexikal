@@ -20,7 +20,7 @@ import { Plus } from "lucide-react";
 import { useCallback } from "react";
 import { useState } from "react";
 import {
-  usePostContextMarkdown,
+  getContextQueryKeyAndFn,
   usePostContextMetadata,
 } from "@/react-query/contexts";
 import { useParams } from "next/navigation";
@@ -46,9 +46,6 @@ export function AddContext() {
     setDescription("");
   };
 
-  const { mutate: postContextMarkdown, isPending: isUploadingMarkdown } =
-    usePostContextMarkdown();
-
   const { mutate: postContextMetadata, isPending: isUploadingMetadata } =
     usePostContextMetadata({
       onSuccess: async (context) => {
@@ -72,15 +69,18 @@ export function AddContext() {
                 path: { notebook_id: notebookId, context_id: context.id },
               },
             }),
-            // postContextMarkdown({
-            //   data: {
-            //     path: { notebook_id: notebookId, context_id: context.id },
-            //   },
-            // }),
+            queryClient.fetchQuery(
+              getContextQueryKeyAndFn({
+                notebookId,
+                contextId: context.id,
+              })
+            ),
           ];
 
-          await Promise.all(promises);
-          updateContextCache(queryClient, notebookId, context);
+          const [_, updatedContext] = await Promise.all(promises);
+          if (updatedContext) {
+            updateContextCache(queryClient, notebookId, updatedContext);
+          }
           setUploadingFile(false);
           handleClose();
         }
@@ -108,8 +108,7 @@ export function AddContext() {
     });
   };
 
-  const isUploading =
-    isUploadingMetadata || uploadingFile || isUploadingMarkdown;
+  const isUploading = isUploadingMetadata || uploadingFile;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,9 +1,8 @@
-"""Database operations for managing document chunks and their embeddings."""
-
 import logging
 import re
 from typing import Dict, List
 
+from app.models.chunks import Chunk
 from pydantic_settings import BaseSettings
 from supabase import Client
 
@@ -17,7 +16,7 @@ def clean_text(text: str) -> str:
     return text
 
 
-async def store_chunks(db: Client, context_id: str, chunks: List[Dict]):
+async def store_chunks(db: Client, context_id: str, chunks: List[Chunk]):
     """Store document chunks and their embeddings in the database"""
     try:
         # Prepare chunks for insertion with cleaned text

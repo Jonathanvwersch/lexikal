@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 import voyageai
 from app.models.chunks import Chunk
-from app.schemas.chat import ChatMessage
+from app.schemas.chat import ChatMessage, ChatMessageSource
 from dotenv import load_dotenv
 from openai import AsyncOpenAI
 from supabase import Client
@@ -55,28 +55,42 @@ async def get_relevant_chunks(
 
 async def generate_response(
     query: str, chunks: List[Chunk], history: List[ChatMessage] = None
-) -> Tuple[str, List[dict]]:
+) -> Tuple[str, List[ChatMessageSource]]:
     """
-    Generate a response using the relevant chunks and chat history
+    Generate a response using the relevant chunks and chat history with citations
     """
-    # Format context from chunks
-    context = "\n\n".join([chunk["content"] for chunk in chunks])
+    # Format context from chunks with identifiers
+    context_with_refs = []
+    for i, chunk in enumerate(chunks):
+        # Create a reference ID for each chunk starting from 0
+        citation_id = f"{i}"
+        context_with_refs.append(
+            f"Context citation ID: {citation_id}, Context: {chunk['content']}"
+        )
+
+    context = "\n\n".join(context_with_refs)
 
     messages = []
-
     if history:
         messages.extend([{"role": msg.role, "content": msg.content} for msg in history])
 
-    # Add system message with context and improved prompt
+    # Updated system prompt to request citations
     messages.append(
         {
             "role": "system",
             "content": (
-                f"You are a helpful AI assistant analyzing PDF documents. "
-                f"Use the following context to answer the user's question:\n\n{context}\n\n"
-                "If the answer cannot be found in the provided context, please indicate this "
-                "and suggest uploading more documents or selecting additional contexts."
-                "When referencing information, be specific about where it comes from in the document."
+                "You are a world class researcher. "
+                "You are going to be provided with a set of chunks of information, known henceforth as context, sourced from a document using retrieval augmented generation. "
+                "Your job is to synthesize the information and provide a detailed and comprehensive response to the user's query based solely on the context provided. "
+                "The context are presented in a list format separated by spaces. Each chunk has an associated citation ID. "
+                "Here is the context:\n\n"
+                f"{context}\n\n"
+                "Requirements for your response:"
+                "1. If you reference a specific context chunk within your response, include the citation ID DIRECTLY in square brackets, i.e. [X] where X is the citation ID (starting from 0), after the reference, just as a world class researcher would do."
+                "2. If you combine information from multiple chunks, include all relevant citations at the end of your response. Each citation should be cited within its own square brackets like [X][Y]. But in general, cite each chunk context individually."
+                "3. If the answer cannot be found in the provided context, indicate this clearly by stating the following: 'Based on the available context, I don't have enough information to answer that question.'"
+                "4. Make your citations flow naturally within sentences while being precise about sources"
+                "5. Your response should be detailed and comprehensive, and cite the relevant context chunks to support your points of view."
             ),
         }
     )
@@ -85,18 +99,21 @@ async def generate_response(
 
     # Get response from ChatGPT
     response = await openai_client.chat.completions.create(
-        model="gpt-4", messages=messages, temperature=0.7
+        model="gpt-4",
+        messages=messages,
+        temperature=0,
     )
 
-    # Extract sources with more context
+    # Extract sources with zero-based citation IDs
     sources = [
         {
             "context_id": chunk["context_id"],
-            "content": chunk["content"][:200],  # Preview of the chunk
-            "similarity": chunk.get("similarity", 0),  # Include similarity score
-            "metadata": chunk.get("metadata", {}),  # Include metadata like page numbers
+            "content": chunk["content"],
+            "similarity": chunk.get("similarity", 0),
+            "metadata": chunk.get("metadata", {}),
+            "citation_id": f"{i}",
         }
-        for chunk in chunks
+        for i, chunk in enumerate(chunks)
     ]
 
     return response.choices[0].message.content, sources

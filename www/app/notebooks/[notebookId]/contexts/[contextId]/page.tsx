@@ -1,10 +1,7 @@
-import { queryKeys } from "@/react-query/keys";
 import NotebookLayout from "../../components/notebook-layout";
 import { NotebookParams } from "../../types";
-import { useCacheQuery } from "@/hooks/use-cache-query";
-import { ContextsGetResponse } from "@/generated";
-import { useGetContextFile } from "@/react-query/contexts";
-import { ContextViewer } from "../components/context-viewer";
+
+import { ContextViewer } from "./components/context-viewer";
 
 type Props = Readonly<{
   params: Promise<Required<NotebookParams>>;
